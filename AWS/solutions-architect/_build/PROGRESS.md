@@ -111,7 +111,7 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 | `ebs.md` | M | F | done | Reviewed 2026-09-12, FIX THEN PASS, 30 numeric claims verified by curl fetch, no summaries. One blocking: a quiz stem asked for something no option pair delivered. 5 should-fix applied. Review settled the gp2 and io1 generation question: EBS and RDS run separate storage lifecycles and both units were right, each now names its context |
 | `efs.md` | S | G | checked | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 20 sources. Arrived at 3933 body words, 31 percent over the S ceiling; trimmed by the coordinator to 2993, in tier, with all six quiz questions' supporting facts preserved. check.sh now 0 errors, 1 planned-link warning. Still needs an author record and independent review. |
 | `fsx.md` | S | G | checked | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 23 sources. Arrived at 3324 body words, 11 percent over the S ceiling; trimmed by the coordinator to 2985, in tier. The required four-way comparison table is present with the specified columns: protocol, use case, S3 integration, Multi-AZ, backup. check.sh 0 errors, 1 planned-link warning. Still needs an author record and independent review. |
-| `storage-gateway.md` | S | G | written | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 23 sources. BUT body is 4121 words against the S range of 1800 to 3000, 37 percent over the ceiling. Confirm the required comparison table and cached-versus-stored treatment. Needs a trim to tier, then an author record, then independent review. |
+| `storage-gateway.md` | S | G | checked | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Arrived at 4121 body words, 37 percent over the S ceiling; trimmed to 2782, in tier. Both required tables survive with their lead-in sentences, including the selection-rules column, and all four gateway types remain with Volume Gateway cached versus stored in its own section. The quiz is byte-identical to the pre-trim version, verified by diff against commit 3e44e47. check.sh 0 errors, 3 planned-link warnings. Still needs an author record and independent review. |
 | `backup-and-disaster-recovery.md` | L | F | done | Reviewed 2026-09-12, FIX THEN PASS, 20 facts verified. Owns 40 bullets, the most in the course. Two blocking: FSx for OpenZFS has native cross-Region replication, and a quiz option was defensible as written. Reviewer confirmed the AWS Transform MGN rename, Aurora at 10 secondary Regions, and that S3 RTC is 99.9 percent |
 | `snow-family.md` | S | G | todo | Verify Snowcone and Snowmobile status |
 | `transfer-family-and-datasync.md` | S | G | todo | |
@@ -415,8 +415,33 @@ Append one line per working session: date, what was completed, what broke.
   the 2026-09-19 and 2026-09-20 continuation was committed and pushed to main in
   one commit. State at that point: 42 service units done, 2 checked (`efs.md`
   and `fsx.md`, trimmed to tier but not yet independently reviewed), 1 written
-  (`storage-gateway.md`, still 4121 body words against an S ceiling of 3000 and
-  not yet trimmed), 25 todo. `bash _build/check.sh` reports 0 errors course-wide.
+  (`storage-gateway.md`, committed at 4121 body words and trimmed to 2782 in a
+  follow-up commit, see the entry below), 25 todo. `bash _build/check.sh` reports 0 errors course-wide.
   Batch G stalled on the account monthly spend limit, which killed three writers
   and one trim agent; it is the binding constraint on finishing batch G, not the
   work itself.
+
+- 2026-09-20: `storage-gateway.md` trimmed from 4121 to 2782 body words, inside
+  tier S. The trim agent dispatched before the previous commit outlived the
+  coordinator's assumption that it had died on the spend limit, and reported
+  after that commit landed, so this is a follow-up rather than part of it.
+
+  Worth recording as method, because it beat the coordinator's own hand-trims of
+  efs and fsx: it took a byte-level backup of everything from `## Knowledge
+  check` onward before editing and diffed against it at the end, proving the six
+  questions, their keys, folds and coverage lines were untouched. The
+  coordinator verified that independently against commit 3e44e47. It also
+  refused to chase the last 80 words into the 2400 to 2700 target band, on the
+  grounds that its previous two passes had each cost a fidelity item it then had
+  to buy back, and that the remaining cuts would have taken either a verified
+  limit or a quiz discriminator. Clearing the hard ceiling with fidelity intact
+  is the right trade; the target band is guidance, the 3000 ceiling is the rule.
+
+  It also strengthened two thin dismissals rather than leaving them inferred:
+  Tape Gateway's archive sentence now states that tapes live in service-managed
+  storage rather than a bucket a policy can attach to (Q6 option A), and the
+  S3 File Gateway section now states directly what the table only implied about
+  serving cold files (Q2 option D).
+
+  All three batch G units are now in tier and pass check.sh. None is done: all
+  three still need an author record and independent review.
