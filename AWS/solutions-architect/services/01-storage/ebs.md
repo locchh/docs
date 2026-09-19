@@ -227,18 +227,18 @@ Which solution will meet these requirements?
 
 ### 6. A cross-Region copy bill that doubled (Professional)
 
-A company protects 400 EBS volumes in eu-west-1 with a nightly snapshot that is copied to eu-central-1 for disaster recovery. To reduce cost, an engineer added a step that archives the most recent copy in eu-central-1 to the EBS Snapshots Archive tier each morning. Snapshot storage cost in eu-central-1 rose sharply the following week rather than falling. All snapshots use the same customer managed key in both Regions.
+A company protects 400 EBS volumes in eu-west-1 with a nightly snapshot that is copied to eu-central-1 for disaster recovery. To reduce cost, an engineer added a step that archives the most recent copy in eu-central-1 to the EBS Snapshots Archive tier each morning. Snapshot storage cost in eu-central-1 rose sharply the following week rather than falling. All snapshots use the same customer managed key in both Regions. The company still needs a nightly disaster recovery copy in eu-central-1, and needs its snapshot storage cost there to fall.
 
-Which explanation and remedy will meet the company's cost requirements?
+Which solution will meet these requirements?
 
-- **A)** A cross-Region copy is incremental only while an unarchived previous copy of that snapshot still exists in the destination. Archiving it forces every later copy to be a full copy, so keep the most recent copy in the standard tier and archive only older copies.
-- **B)** Cross-Region snapshot copies are always full copies, so the cost increase is unrelated to archiving; reduce the copy frequency instead.
-- **C)** Snapshots copied across Regions are re-encrypted with the destination Region's default key, which forces a full copy; specify the same key in the destination to restore incremental copies.
-- **D)** Archived snapshots continue to bill at the standard tier rate until they are restored; disable archiving and enable fast snapshot restore on the destination copies instead.
+- **A)** Keep the most recent copy in eu-central-1 in the standard tier and archive only the older copies.
+- **B)** Leave the archiving step in place and reduce the frequency of the cross-Region copy.
+- **C)** Specify the same customer managed key explicitly when copying each snapshot into eu-central-1.
+- **D)** Disable archiving and enable fast snapshot restore on the destination copies.
 
 <details><summary>Answer</summary>
 
-**Answer: A.** A cross-Region copy is incremental only when a previous copy of the same snapshot reached the destination, still exists there, has not been archived, and shares the encryption key with the other copies there. Archiving the most recent copy removes the reference the next copy would have been measured against, so each night produces a full copy of every volume. B is wrong because only the first copy into a Region is necessarily full; later copies are incremental when the four conditions hold. C describes a real cause of full copies, a change of key, but the stem states the same customer managed key is used in both Regions. D misstates archive billing, which charges the lower archive rate for the full copy, and fast snapshot restore is a restore-performance feature charged per snapshot per Availability Zone per hour, which would add cost.
+**Answer: A.** A cross-Region copy is incremental only when a previous copy of the same snapshot reached the destination, still exists there, has not been archived, and shares the encryption key with the other copies there. Archiving the most recent copy removes the reference the next copy would have been measured against, so each night produces a full copy of every volume. B leaves the cause in place: while the most recent copy is archived every morning, every copy is a full copy no matter how often it runs, so a less frequent schedule buys a smaller version of the same problem and weakens the recovery point. C changes nothing, because the stem already states that the same customer managed key is used in both Regions; a key mismatch is a genuine cause of full copies, but it is not this one. D gives up the archive saving entirely and then adds cost, because fast snapshot restore is a restore-performance feature billed per snapshot per Availability Zone per hour and does nothing about copy size.
 
 *Where this is covered: Snapshots, cross-Region copies and the archive tier.*
 

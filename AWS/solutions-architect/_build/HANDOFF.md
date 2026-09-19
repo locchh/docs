@@ -1,5 +1,13 @@
 # Handoff: revamp of the AWS Solutions Architect course
 
+**Note on paths:** use the uppercase `AWS/` directory in this checkout; older
+examples below use lowercase `aws/`. The `check.sh` helper strips only a
+lowercase `aws/solutions-architect/` prefix, so pass it course-root-relative
+paths such as `services/01-storage/efs.md`, with the tier as the LAST argument.
+
+The earlier instruction to leave work uncommitted was lifted on 2026-09-20; the
+commit steps below apply again.
+
 Read this file first. It is written so that any agent or person can execute the
 project without the conversation that produced it. Everything needed is in this
 `_build/` folder.
@@ -67,10 +75,9 @@ This is a large project. Plan for it.
 is finished.** This section describes the shape of the work; the tracker
 describes its state.
 
-As of the last commit: 45 of 106 files complete. The coverage matrix, all eleven
-category indexes, the labs refactor and the notes cleanup are done. Service units
-are being written in the batch order below, each one written by one agent and
-then independently reviewed by another before it counts as done.
+See the dated handoff summary in `PROGRESS.md` for current counts and next work.
+The coverage matrix, category indexes, labs refactor and notes cleanup exist.
+Service drafts must pass independent review before they count as done.
 
 All five original notes folders are gone. Each was folded into the unit that owns
 its material and deleted only after that unit passed review, so nothing was lost:

@@ -346,7 +346,7 @@ Which solution will meet these requirements?
 
 A company keeps production databases in one AWS account and requires that a copy of every production Amazon RDS snapshot be restorable in a separate, locked-down backup account in another Region. During a recovery exercise the backup account could not restore any of the snapshots. All production DB instances were created with encryption enabled using the default key offered by the console.
 
-Which combination of steps will let the backup account restore the snapshots? (Select TWO.)
+Which combination of steps will meet these requirements? (Select TWO.)
 
 - **A)** Grant the backup account `rds:RestoreDBInstanceFromDBSnapshot` in a resource policy on each snapshot.
 - **B)** Increase the manual DB snapshot quota in the production account from 100 to 500.

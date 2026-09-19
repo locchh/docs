@@ -1,35 +1,34 @@
 # Progress tracker
 
 The source of truth for what is done. Update the row after every unit, then
-commit. Any agent picking up this project should read `HANDOFF.md` and then this
-file to find the next task.
+commit. Read `HANDOFF.md` and then this file to find the next task.
 
-## Handoff state, as of 2026-09-12
+## Handoff state, as of 2026-09-19
 
-The tree is clean and pushed; everything below is committed. 37 of 70 service
-units are done, meaning written, checked and passed by an independent review.
+The tracker contains 70 service units: 42 marked done, no drafts awaiting
+review, and 28 not started. This count reflects the rows, not a new audit of
+every completed unit.
 
-Three units are written but NOT done. They are the next work, in this order:
+Systems Manager's prior quiz fixes are already present. Do not repeat the
+obsolete September 12 task list, and do not repeat the September 19 review list:
+all four units on it passed independent review and their findings were applied.
+Review records are in `_build/reviews/`, one `*-REVIEW.md` per unit.
 
-| File | What it still needs |
-|---|---|
-| `08-management/systems-manager.md` | Quiz quality only. The body rework is complete and both fact errors are fixed. Do NOT re-review the body. See the task list below. |
-| `08-management/developer-tools-and-cicd.md` | A first independent review. Stems were fixed in a separate pass; the body has never been read by anyone. |
-| `04-networking/hybrid-connectivity.md` | A first independent review. Tier L, 6,112 body words, never reviewed. |
+**There is no unit awaiting review.** The next work is writing, in the batch
+order in HANDOFF.md. Batch F is finished; start batch G with the S-tier units:
 
-The Systems Manager quiz tasks, all from a review that solved every question and
-found no wrong key:
+| File | Tier | Notes from the plan |
+|---|---|---|
+| `10-migration/dms-and-sct.md` | S | |
+| `10-migration/application-migration-service.md` | S | Now documented as AWS Transform MGN; verify the current page title |
+| `09-analytics/msk.md` | S | |
+| `09-analytics/athena.md` | S | Three written units already link to it |
+| `09-analytics/lake-formation.md` | S | Linked from glue.md |
+| `09-analytics/emr.md` | S | Linked from glue.md |
 
-- Q5's stem says a task starts "so close to the end that it would still be
-  running when the period closes". Cutoff does not guarantee that: it is a fixed
-  hours-before-end value, no task starts after end minus Cutoff, and running
-  tasks are not terminated. The body states it correctly. Fix stem and rationale.
-- Q6's options A and B embed their own justification and B is self-refuting.
-  Rewrite the options.
-- Straw-man distractors that restate the stem's prohibition: Q4 C, Q7 A and E,
-  Q8 B and D. Replace with a neighbouring capability doing what it genuinely
-  does, per the three distractor shapes in STYLE_SPEC.
-- The split is 6 Associate / 2 Professional; the spec wants roughly 5/3.
+`08-management/elastic-beanstalk.md` is the one remaining planned-link warning
+in a finished unit, from `developer-tools-and-cicd.md`. The domain guides, the
+appendix and the whole-course verification pass remain unfinished.
 
 ### Lesson learned, worth applying to every remaining unit
 
@@ -71,7 +70,7 @@ Status values:
 | `written` | File exists, writer reported done |
 | `checked` | `check.sh` passes |
 | `reviewed` | A reviewer returned PASS or FIX THEN PASS |
-| `done` | Findings applied, committed |
+| `done` | Written, checked, independently reviewed, findings applied |
 
 A unit is only `done` after an independent review. Do not skip the review pass.
 
@@ -110,9 +109,9 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 |---|---|---|---|---|
 | `s3.md` | XL | A | done | Reviewed 2026-09-12, FIX THEN PASS, no blocking findings, 28 facts verified. 7 should-fix items applied. Optional items not applied: Q7 label reads Associate; Expedited restore size nuance; Object Lock variable retention and event holds; MRAP runs on Global Accelerator; Mountpoint limits; s3:RequestPayer condition key; S3 Outposts storage class |
 | `ebs.md` | M | F | done | Reviewed 2026-09-12, FIX THEN PASS, 30 numeric claims verified by curl fetch, no summaries. One blocking: a quiz stem asked for something no option pair delivered. 5 should-fix applied. Review settled the gp2 and io1 generation question: EBS and RDS run separate storage lifecycles and both units were right, each now names its context |
-| `efs.md` | S | G | todo | |
-| `fsx.md` | S | G | todo | |
-| `storage-gateway.md` | S | G | todo | |
+| `efs.md` | S | G | checked | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 20 sources. Arrived at 3933 body words, 31 percent over the S ceiling; trimmed by the coordinator to 2993, in tier, with all six quiz questions' supporting facts preserved. check.sh now 0 errors, 1 planned-link warning. Still needs an author record and independent review. |
+| `fsx.md` | S | G | checked | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 23 sources. Arrived at 3324 body words, 11 percent over the S ceiling; trimmed by the coordinator to 2985, in tier. The required four-way comparison table is present with the specified columns: protocol, use case, S3 integration, Multi-AZ, backup. check.sh 0 errors, 1 planned-link warning. Still needs an author record and independent review. |
+| `storage-gateway.md` | S | G | written | Written 2026-09-19 by an agent that hit the account spend limit before running its checks or writing an author record. Structurally complete: check.sh 0 errors, all sections ordered, 6 questions, 23 sources. BUT body is 4121 words against the S range of 1800 to 3000, 37 percent over the ceiling. Confirm the required comparison table and cached-versus-stored treatment. Needs a trim to tier, then an author record, then independent review. |
 | `backup-and-disaster-recovery.md` | L | F | done | Reviewed 2026-09-12, FIX THEN PASS, 20 facts verified. Owns 40 bullets, the most in the course. Two blocking: FSx for OpenZFS has native cross-Region replication, and a quiz option was defensible as written. Reviewer confirmed the AWS Transform MGN rename, Aurora at 10 secondary Regions, and that S3 RTC is 99.9 percent |
 | `snow-family.md` | S | G | todo | Verify Snowcone and Snowmobile status |
 | `transfer-family-and-datasync.md` | S | G | todo | |
@@ -142,7 +141,7 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 | File | Tier | Batch | Status | Notes |
 |---|---|---|---|---|
 | `vpc.md` | XL | A | done | Reviewed 2026-09-12, FIX THEN PASS, 32 facts verified, all 12 keys agreed. 2 blocking and 10 should-fix applied. Writer correctly dropped two unverifiable Transit Gateway security group claims. Later corrected when the ELB reviewer found a blanket claim that an internet-facing load balancer takes no Elastic IP, which is true of ALB but not NLB |
-| `hybrid-connectivity.md` | L | E | checked | Uncommitted complete draft: 6112 body words, 10 questions, 33 fetched AWS sources. Check passes; independent cold review still required. Includes current large-bandwidth VPN, IPv6 Client VPN, cross-Region PrivateLink and Route 53 VPC Resolver changes while preserving exam-era mappings |
+| `hybrid-connectivity.md` | L | E | done | First independent review 2026-09-19, FIX THEN PASS after three blocking findings, all fixed: the Site-to-Site VPN Concentrator was conflated with the large-bandwidth tunnel (it is 25+ sites at 100 Mbps each, 5 Gbps aggregate, TGW and BGP only), a dead SiteLink source URL, and AWS Network Manager mentioned but not taught despite being an enumerated plan-row sub-topic. Four should-fix items applied including the November 2021 DXGW supernet exception and a new consolidated transitive routing section that also covers the owned VPC peering bullet. 23 facts verified, all 10 keys agreed. Now 6658 body words, 10 topic sections, 33 sources all resolving. Review at `_build/reviews/2026-09-19-hybrid-connectivity-REVIEW.md`. |
 | `route53.md` | L | D | done | Reviewed 2026-09-12, FIX THEN PASS, 30 facts verified, all 10 keys agreed. Both renames confirmed: Amazon Application Recovery Controller and Route 53 VPC Resolver. One blocking fix: quota adjustability was stated backwards. 5 should-fix applied |
 | `cloudfront.md` | M | F | done | Reviewed 2026-09-12, FIX THEN PASS, 25 facts verified, all 8 keys agreed. All seven of the writer's quota corrections against common study material confirmed. Two blocking: the regional edge cache skip is S3-specific, and origin failover on a connection failure requires 503 to be nominated. 5 should-fix applied |
 | `global-accelerator.md` | S | G | todo | |
@@ -198,7 +197,7 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 | `service-catalog.md` | S | G | todo | Verify Proton status |
 | `config-trusted-advisor-health-and-well-architected.md` | XS group | H | todo | |
 | `cost-management.md` | L | E | done | Reviewed 2026-09-12, FIX THEN PASS, no blocking findings, 22 facts verified, all 10 keys agreed. 5 should-fix applied. Reviewer confirmed the same-zone data transfer citation the coordinator added |
-| `developer-tools-and-cicd.md` | M | F | checked | Committed draft, unreviewed; 3512 body words, 8 questions, 25 fetched AWS sources; check passes with one planned-link warning and all source URLs return success. Explicitly SAP-only. CodeCommit is closed to new customers, CodeGuru Reviewer accepts no new repository associations, and Proton ends support 2026-10-07. Still requires an independent cold review. |
+| `developer-tools-and-cicd.md` | M | F | done | Independently reviewed 2026-09-19, FIX THEN PASS, no blocking findings; 15 facts verified, all 8 keys agreed with no second defensible option, 26/26 source URLs return 200. Four should-fix items applied: bolded NLB/ALB and EC2 Auto Scaling at first mention, strengthened Q3 into a real Professional question, replaced the cross-service distractors in Q1 and Q6. Now 3888 body words. Review at `_build/reviews/2026-09-19-developer-tools-and-cicd-REVIEW.md`. |
 
 ### 09-analytics
 
@@ -206,7 +205,7 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 |---|---|---|---|---|
 | `kinesis.md` | M | F | done | 3718 body words, 8 questions, 25 sources; stems rewritten and review applied. |
 | `msk.md` | S | G | todo | |
-| `glue.md` | M | F | todo | A writer claimed this row on 2026-09-12 and was stopped before writing anything. No file exists. Verify Glue for Ray status. |
+| `glue.md` | M | F | done | Written and independently reviewed 2026-09-19, FIX THEN PASS, no blocking findings. Two reviewers: the first covered content and coverage, the second supplied a blind quiz audit after the first disclosed it had read the answer folds before solving. Blind solve agreed 8 of 8. Five should-fix items applied: real pricing dimensions and a DPU definition, Flex and Auto Scaling eligibility, workflow quotas, a dropped SAP 2.1 claim, and rewritten distractors in Q3 and Q8. Two fact-wording corrections applied on re-verification: G.4X and G.8X are also Flex-ineligible, and G.025X is Auto Scaling supported for streaming. Review at `_build/reviews/2026-09-19-glue-REVIEW.md`. |
 | `athena.md` | S | G | todo | |
 | `lake-formation.md` | S | G | todo | |
 | `emr.md` | S | G | todo | |
@@ -217,7 +216,7 @@ Batch letters come from `HANDOFF.md`. Work A through H.
 
 | File | Tier | Batch | Status | Notes |
 |---|---|---|---|---|
-| `migration-hub-discovery-and-strategy.md` | M | F | todo | |
+| `migration-hub-discovery-and-strategy.md` | M | F | done | Found on disk 2026-09-19 with no author record, then independently reviewed: FIX THEN PASS after one blocking finding. The opening claimed SAA-C03 tasks 2.2, 3.3 and 4.3, which the unit does not teach and the matrix lists as None; corrected to SAP-C02 4.1 ownership only. Seven should-fix items applied including a dead pricing URL, a false Refactor Spaces lifecycle implication, and thin asset planning. 20 facts verified, all 8 keys agreed. Now 4512 body words, 22 sources all resolving. Review at `_build/reviews/2026-09-19-migration-hub-REVIEW.md`. |
 | `dms-and-sct.md` | S | G | todo | |
 | `application-migration-service.md` | S | G | todo | |
 
@@ -298,3 +297,126 @@ Append one line per working session: date, what was completed, what broke.
 - 2026-09-11: Phase 1 completed. All 11 category indexes are 250 to 500 words,
   pass the checker and include every planned unit. Independent review found nine
   blocking wording or coverage-map issues across seven files; all were fixed.
+
+- 2026-09-19: Resumed from the current worktree. Corrected the developer-tools
+  draft using official AWS documentation; rewrote its obsolete CodeCommit quiz
+  and clarified networking, deployment and secret-handling decisions. Recorded
+  evidence and kept its status checked pending independent review. Updated the
+  stale handoff summary to 38 done / 2 checked / 30 todo service units. No commit.
+
+- 2026-09-19: Added the missing tier M Glue unit with seven topic sections,
+  Professional depth, a worked scenario and eight original questions. Both owned
+  SAA 3.5 bullets are taught explicitly. Verified the Ray closure, bookmark and
+  checkpoint differences, and workflow concurrency behavior. Author checks pass;
+  independent review remains pending. Counts now 38 done / 3 checked / 29 todo.
+  No commit or AWS account resources created.
+
+- 2026-09-19: Audited the uncommitted worktree. Found
+  `10-migration/migration-hub-discovery-and-strategy.md` complete on disk but
+  still marked todo: an earlier session wrote it and ended before recording it.
+  It passes check.sh at tier M with no errors, so it was moved to checked rather
+  than rewritten. Re-verified the CodeCommit reversal in the developer-tools
+  draft against the CodeCommit documentation history, which records "available
+  to new customers" on November 25, 2025; the correction stands. Counts now
+  38 done / 4 checked / 28 todo. No commit.
+
+- 2026-09-19: Ran the four outstanding independent reviews, one agent per unit
+  reading cold, and applied every blocking and should-fix finding. Two units had
+  blocking errors. migration-hub claimed three SAA-C03 task statements it does
+  not teach and that the matrix records as None, from a lesson-signal count
+  misread as task numbers. hybrid-connectivity conflated the Site-to-Site VPN
+  Concentrator with the large-bandwidth VPN tunnel, inverting a design decision,
+  carried a dead SiteLink source URL, and left AWS Network Manager as one
+  sentence despite it being an enumerated plan-row sub-topic. developer-tools
+  and glue returned no blocking findings. Glue needed a second agent for the
+  quiz: the first had read the answer folds before solving, so a blind audit was
+  run separately and agreed 8 of 8. Counts now 42 done / 0 awaiting review /
+  28 todo. No commit.
+
+- 2026-09-19: Ran `check.sh` with no arguments over the whole course, which had
+  not been done recently. It reported four errors, all in units already marked
+  done and none related to the four reviewed this session. One was a genuine
+  text corruption and is fixed: `08-management/aws-api-cli-and-sdks.md` question
+  5 ended mid-word, "without weakening the resili", with the stem concatenated
+  onto it with no break. Repaired to "the resilience of the application" on its
+  own line; that unit now passes.
+
+  The other three were quiz stems that did not use one of the five endings
+  STYLE_SPEC lines 218 to 222 permits. All three are now fixed, without changing
+  any answer key:
+
+  | File | Change |
+  |---|---|
+  | `05-database/rds.md` Q10 | Stem swapped to "Which combination of steps will meet these requirements? (Select TWO.)". The scenario already stated the requirement, so nothing else moved |
+  | `07-security/organizations-identity-center-and-control-tower.md` Q5 | Was "Which explanation and remediation will meet these requirements?" with options that paired an explanation to a remedy. The scenario now states the requirement explicitly, the stem is "Which solution will meet these requirements?", and the four options are action-shaped. The explanations moved into the rationale, where the spec wants them. Key unchanged at B |
+  | `01-storage/ebs.md` Q6 | Same shape and same treatment. Key unchanged at A. Because options B and D now propose actions rather than assert billing behavior, their dismissals were rewritten to address what they actually propose |
+
+  These edits also remove a second defect the developer-tools review named: an
+  option that embeds its own justification. Both reshaped questions had four of
+  them.
+
+  Caveat for whoever picks this up: the replacement option wording in these two
+  questions is coordinator-written and has not been independently solved. The
+  keys are unchanged and the rationales were checked against the existing body
+  text, but a future pass should treat ebs.md Q6 and organizations Q5 the way it
+  treats any unreviewed quiz content.
+
+  Definition-of-done item 2 is now satisfied: `bash _build/check.sh` with no
+  arguments reports 0 errors across every content file. It reports 39 warnings,
+  every one of them a link to a planned but unwritten unit, which is expected
+  while 28 units remain todo.
+
+- 2026-09-19/20: Started batch G. Dispatched three writers for `efs.md`,
+  `fsx.md` and `storage-gateway.md`. All three wrote their unit to disk and then
+  died on the same error: the ACCOUNT MONTHLY SPEND LIMIT, HTTP 429, not any
+  fault in the work. None of them ran its own checks or wrote an author record,
+  so all three arrived in the same state as the migration-hub unit did: complete
+  on disk, unrecorded, unverified.
+
+  The coordinator ran check.sh on each. All three pass with 0 errors and are
+  structurally complete. All three are over the tier S body range of 1800 to
+  3000 words: efs 3933, storage-gateway 4121, fsx 3324. REVIEW_SPEC treats a
+  deviation under fifteen percent as should-fix; efs and storage-gateway are
+  well past that.
+
+  Cause worth recording, because it will repeat: the dispatch prompt stressed
+  "target about 2400 body words, the middle of the range, not the floor",
+  quoting this tracker's own lesson that floor-length units needed rework. The
+  writers overcorrected. A future S-tier dispatch should give the range AND the
+  ceiling as a hard limit, for example "2,200 to 2,600 body words, and never
+  above 3,000", rather than naming only a target.
+
+  Next actions for these three, in order: trim each to tier, write the missing
+  author records, then independent review. Batch G has 19 units after these.
+
+- 2026-09-20: Trimmed `efs.md` from 3933 to 2993 body words and `fsx.md` from
+  3324 to 2985, both now inside tier S and passing check.sh with 0 errors. The
+  coordinator did this directly rather than spending more agent runs, because
+  the account spend limit had just killed three. Method: read each quiz first
+  and map which body facts its six questions depend on, then cut only from
+  material no question rests on. For EFS that meant the burst-credit arithmetic,
+  the Max I/O detail, per-client throughput caps, latency figures and part of
+  the quota list; the lifecycle CLI example also went, since the prose above it
+  already stated all three policies and their defaults. For FSx the cuts were
+  spread across the worked scenario, Professional depth, the Lustre and File
+  Cache section and the cost section. No answer key changed and no table was
+  removed.
+
+  One correction made during the EFS trim and worth flagging as a trap: a cut
+  had removed the definition after **AWS Organizations** at its first mention,
+  which breaks the spec's bold-and-define rule. Restored, and the words taken
+  from redundant prose instead. When trimming to a ceiling, check that a cut has
+  not removed a first-mention definition.
+
+  `storage-gateway.md` is still with a trim agent and was left untouched to
+  avoid two writers on one file.
+
+- 2026-09-20: The user lifted the do-not-commit instruction, so everything from
+  the 2026-09-19 and 2026-09-20 continuation was committed and pushed to main in
+  one commit. State at that point: 42 service units done, 2 checked (`efs.md`
+  and `fsx.md`, trimmed to tier but not yet independently reviewed), 1 written
+  (`storage-gateway.md`, still 4121 body words against an S ceiling of 3000 and
+  not yet trimmed), 25 todo. `bash _build/check.sh` reports 0 errors course-wide.
+  Batch G stalled on the account monthly spend limit, which killed three writers
+  and one trim agent; it is the binding constraint on finishing batch G, not the
+  work itself.

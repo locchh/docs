@@ -259,18 +259,18 @@ Which solution will meet these requirements?
 
 ### 5. A guardrail that one account ignores (Professional)
 
-A company has an SCP attached to the organization root that denies the creation of internet gateways. Every account complies except one, where an administrator continues to create them successfully. That account is the account from which the organization was originally created, and it also runs a legacy reporting application. Audit logs confirm the SCP is attached to the root and has not been modified.
+A company has an SCP attached to the organization root that denies the creation of internet gateways. Every account complies except one, where an administrator continues to create them successfully. That account is the account from which the organization was originally created, and it also runs a legacy reporting application. Audit logs confirm the SCP is attached to the root and has not been modified. The company needs the internet gateway restriction enforced in every account in the organization.
 
-Which explanation and remediation will meet these requirements?
+Which solution will meet these requirements?
 
-- **A)** The SCP is not inherited by accounts placed directly under the root, so the account must be moved into an OU.
-- **B)** SCPs never apply to the management account, so the reporting workload should be migrated to a member account.
-- **C)** The account is a delegated administrator, and delegated administrators are exempt from SCPs, so the delegation should be removed.
-- **D)** The `FullAWSAccess` policy attached to that account overrides the deny, so it should be detached from the account.
+- **A)** Move the account out of the root into an OU and attach the SCP to that OU.
+- **B)** Migrate the reporting workload into a member account and run no workloads in the management account.
+- **C)** Remove the account's delegated administrator designation.
+- **D)** Detach the `FullAWSAccess` policy from the account.
 
 <details><summary>Answer</summary>
 
-**Answer: B.** SCPs affect only member accounts and have no effect on users or roles in the management account, which is precisely why AWS recommends running no workloads there. A is wrong because accounts directly under the root do inherit root-attached SCPs. C is a plausible-sounding inversion of a real fact: SCPs do apply to member accounts designated as delegated administrators. D is wrong because an explicit `Deny` always wins over any `Allow`, so `FullAWSAccess` cannot override it, and detaching the last SCP from an entity is not permitted anyway.
+**Answer: B.** SCPs affect only member accounts and have no effect on users or roles in the management account, which is precisely why AWS recommends running no workloads there. A is wrong because accounts directly under the root already inherit root-attached SCPs, and in any case no placement in the hierarchy subjects the management account to an SCP. C is a plausible-sounding inversion of a real fact: SCPs do apply to member accounts designated as delegated administrators. D is wrong because an explicit `Deny` always wins over any `Allow`, so `FullAWSAccess` cannot override it, and detaching the last SCP from an entity is not permitted anyway.
 
 *Where this is covered: The Organizations policy types.*
 

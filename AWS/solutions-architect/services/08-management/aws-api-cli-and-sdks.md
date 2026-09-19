@@ -283,7 +283,9 @@ Which solution will meet these requirements?
 
 ### 5. Throttling from a polling fleet (Associate)
 
-A company runs a batch application on 2,000 EC2 instances. Each instance calls `DescribeTags` every second to learn its own configuration. Every caller in the account has begun receiving `RequestLimitExceeded` on `DescribeTags`, while other EC2 API calls succeed normally. The company wants to remove the throttling without weakening the resiliWhich combination of steps will meet these requirements? (Select TWO.)
+A company runs a batch application on 2,000 EC2 instances. Each instance calls `DescribeTags` every second to learn its own configuration. Every caller in the account has begun receiving `RequestLimitExceeded` on `DescribeTags`, while other EC2 API calls succeed normally. The company wants to remove the throttling without weakening the resilience of the application.
+
+Which combination of steps will meet these requirements? (Select TWO.)
 
 - **A)** Replace the polling loop with local reads of the instance's own metadata and an Amazon EventBridge notification when configuration changes.
 - **B)** Set `AWS_MAX_ATTEMPTS` to 10 on every instance.
