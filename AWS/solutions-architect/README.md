@@ -40,23 +40,23 @@ before the notes were deleted.
 
 **Associate**
 
-- [Certification page](https://aws.amazon.com/certification/certified-solutions-architect-associate/)
-- [SAA-C03 exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html)
-- [Skill Builder exam prep plan](https://skillbuilder.aws/learning-plan/UYRXS2DF85/exam-prep-plan-aws-certified-solutions-architect--associate-saac03--english/U991QUF9C3)
-- [Official practice question set, 20 questions, free](https://skillbuilder.aws/learn/6NV91XYP1P/official-practice-question-set-aws-certified-solutions-architect--associate-saac03--english/N1HSPV1K17)
-- [Official practice exam, subscription](https://skillbuilder.aws/learn/R3KVD4BBJY/official-practice-exam-aws-certified-solutions-architect--associate-saac03--english/W7GU3R1HCT)
+- [Certification page](https://aws.amazon.com/certification/certified-solutions-architect-associate/) - Official SAA-C03 certification page: exam overview, cost, scheduling and recertification
+- [SAA-C03 exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html) - The authoritative scope document: four domains with their weightings, every task statement, and the in-scope service list
+- [Skill Builder exam prep plan](https://skillbuilder.aws/learning-plan/UYRXS2DF85/exam-prep-plan-aws-certified-solutions-architect--associate-saac03--english/U991QUF9C3) - Official AWS Skill Builder learning plan for SAA-C03, a sequenced set of courses and labs
+- [Official practice question set, 20 questions, free](https://skillbuilder.aws/learn/6NV91XYP1P/official-practice-question-set-aws-certified-solutions-architect--associate-saac03--english/N1HSPV1K17) - Twenty AWS-written questions with answer explanations; the closest free sample of real exam wording
+- [Official practice exam, subscription](https://skillbuilder.aws/learn/R3KVD4BBJY/official-practice-exam-aws-certified-solutions-architect--associate-saac03--english/W7GU3R1HCT) - Full-length timed practice exam from AWS, behind a Skill Builder subscription
 
 **Professional**
 
-- [Certification page](https://aws.amazon.com/certification/certified-solutions-architect-professional/)
-- [SAP-C02 exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html)
-- [Skill Builder exam prep](https://skillbuilder.aws/category/exam-prep/solutions-architect-professional-SAP-C02)
+- [Certification page](https://aws.amazon.com/certification/certified-solutions-architect-professional/) - Official SAP-C02 certification page: exam overview, recommended experience, cost and scheduling
+- [SAP-C02 exam guide](https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-professional-02/solutions-architect-professional-02.html) - The authoritative scope document: four domains with their weightings, every task statement, and the in-scope service list
+- [Skill Builder exam prep](https://skillbuilder.aws/category/exam-prep/solutions-architect-professional-SAP-C02) - Official AWS Skill Builder exam-prep category for SAP-C02, collecting its courses, question sets and practice exam
 
 **Both**
 
-- [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html)
-- [AWS Architecture Center](https://aws.amazon.com/architecture/)
-- [ExamProCo AWS Examples](https://github.com/ExamProCo/AWS-Examples)
+- [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html) - The six pillars both exams reason from; most "which option is best" answers trace back to one of them
+- [AWS Architecture Center](https://aws.amazon.com/architecture/) - AWS reference architectures, diagrams and whitepapers; useful for seeing whole designs rather than single services
+- [ExamProCo AWS Examples](https://github.com/ExamProCo/AWS-Examples) - A codebase of all the AWS examples used through AWS Certification Study Courses
 
 Slide decks and cheatsheets live in the repository-root [assets/](../../assets)
 directory: the SAA-C03 cheatsheet plus `PDF_Oct_16_2025/`, a per-service deck set
