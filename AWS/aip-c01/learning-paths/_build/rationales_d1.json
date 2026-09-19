@@ -1,0 +1,446 @@
+{
+ "E1-Q1": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 05, Giving models one way to retrieve",
+  "rationale": "A standard function-calling action such as vectorSearch gives every model one interface, and an MCP client behind it routes to OpenSearch, pgvector or the Knowledge Base without exposing storage differences; the model can invoke it mid-conversation. Cross-cluster search only spans OpenSearch clusters, Step Functions keyword searches and Lambda batch retrieval are not model-callable interfaces."
+ },
+ "E1-Q3": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 05, Choosing and generating embeddings",
+  "rationale": "Dense domain text needs higher dimensionality for semantic precision, and Titan embeddings let you choose it; Lambda-based parallel generation handles large-scale batch embedding. A text-generation model does not produce embeddings, lower dimensionality worsens the stated problem, and semantic chunking does not fix a weak embedding model."
+ },
+ "E1-Q10": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 02, Customising models and managing their lifecycle",
+  "rationale": "SageMaker Model Registry versions the fine-tuned models with approval status and lineage, CI/CD pipelines deploy approved versions with rollback, and lifecycle rules retire old variants. Manual ECR image switching, timestamped S3 folders with Lambda environment variables, and overwriting artifacts in place have no versioning, approval or safe rollback."
+ },
+ "E1-Q14": {
+  "answer": "C,D",
+  "confidence": "graded",
+  "section": "Unit 05, Making results more relevant",
+  "rationale": "Bedrock reranker models reorder retrieved chunks by semantic relevance, and Knowledge Bases hybrid search on OpenSearch Serverless blends keyword and vector scores; both are managed and stay in the Bedrock architecture. Custom pgvector ranking and a SageMaker BM25 pipeline are custom ranking algorithms the question excludes; S3 inventory access frequency is not relevance."
+ },
+ "E1-Q16": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 04, Metadata frameworks",
+  "rationale": "Registering curated and scraped datasets in the Glue Data Catalog gives reviewers searchable source metadata, and tagging each generated output with the sources it used provides automated lineage with almost no extra infrastructure. CloudTrail tracks API calls not reviewer approvals, Clarify explains model predictions not document provenance, and manual cross-referencing of invocation logs is high overhead."
+ },
+ "E1-Q18": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 03, Format the request the way the model expects",
+  "rationale": "Dialog-style Bedrock requests expect a structured JSON body with role-based messages, system instructions and context, which is what the Converse API standardises; enforcing that schema in the orchestration layer removes the payload variance causing inconsistent responses. Newline-joined strings, plain text and hoping the model fetches history from DynamoDB all ignore the model's schema."
+ },
+ "E1-Q21": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 02, Switching models without code changes",
+  "rationale": "An API Gateway and Lambda routing layer with configuration-based model selection gives modular services, independent scaling and switching without code changes. Hardcoded Step Functions tasks, an EC2 router configured by environment variables and a monolithic Lambda all require code or instance changes and couple the workloads."
+ },
+ "E1-Q23": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "SageMaker Processing preprocesses images and tabular sensor data at scale, Amazon Transcribe converts the call audio to text, and a Bedrock multimodal model consumes the assembled inputs; that is the managed, orchestrated multimodal pipeline. Per-type EC2 scripts, manual preprocessing and a single Lambda pushing raw binaries do not scale or match model input requirements."
+ },
+ "E1-Q24": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 06, Interactive systems that keep context",
+  "rationale": "Step Functions orchestrates clarification loops, Comprehend detects missing or ambiguous intent, and DynamoDB durably stores conversation turns for context-aware follow-ups, the exact trio named in the task statement. Prompts alone are not durable storage, SQS is a queue not a session store, and rewriting questions in Lambda does not ask the user for clarification."
+ },
+ "E1-Q25": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 04, Metadata frameworks",
+  "rationale": "The Glue Data Catalog registers every source dataset for end-to-end traceability, metadata tags on summaries provide attribution, and CloudTrail records data access events, all managed and low maintenance. Aurora access records, S3 path strings with server access logs, and a DynamoDB mapping with CloudWatch Logs are custom, partial and higher effort."
+ },
+ "E1-Q27": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 02, Switching models without code changes",
+  "rationale": "API Gateway and Lambda form the routing layer and AWS AppConfig holds the model and provider selection, so a configuration change switches models with zero code modification and no redeploy. EC2 environment variables, one endpoint per model that clients must choose, and hardcoded model IDs all require manual or code changes."
+ },
+ "E1-Q36": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 06, Complex prompt systems with Bedrock Flows",
+  "rationale": "Bedrock Flows is built for sequential prompt chains with condition nodes that branch on model output, reusable prompt nodes, and Lambda or inline code nodes for pre- and post-processing. EventBridge keyword rules, client-side logic across standalone prompts, and one monolithic prompt cannot express conditional multi-step processing."
+ },
+ "E1-Q39": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 04, Connecting the content systems",
+  "rationale": "Lambda connectors pull updated documents from the document management system, the wiki and the legacy systems, normalise formatting and enrich metadata, and land the content in the S3 bucket the Knowledge Base ingests from, supporting incremental updates. Fetching at inference time from RDS skips ingestion, direct Knowledge Base connectors do not cover every system or the required preprocessing, and DynamoDB Streams cannot capture changes in external systems."
+ },
+ "E1-Q40": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 05, Segmenting documents",
+  "rationale": "Hierarchical chunking keeps large parent chunks for chapter context and small child chunks for precise matches, with overlap for continuity, which suits long manuals with nested procedures and section-level updates. Single-chunk documents lose precision, semantic chunking without overlap loses continuity, and uniform fixed-size chunks ignore the document structure."
+ },
+ "E1-Q43": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 02, Choosing with evidence",
+  "rationale": "Model selection is an evaluation exercise: benchmark candidate Bedrock models on accuracy, latency, hallucination rate and domain terminology against the requirements. Relying on vendor claims, picking the smallest model regardless of domain performance, or choosing on first impressions all skip the evidence."
+ },
+ "E1-Q47": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 05, Handling the query",
+  "rationale": "Using a Bedrock model to expand and reformulate vague queries into domain-aligned intents, then decomposing them into sub-queries in Lambda before vector search, is the query-handling pattern in the task statement. Larger chunk overlap, keyword searches against S3, and lower similarity thresholds add noise rather than understanding the query."
+ },
+ "E1-Q55": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 01, Proving feasibility before scaling",
+  "rationale": "A PoC should be small and comparative: several Bedrock models behind a thin API Gateway and Lambda layer, measured for performance, latency and quality before production investment. Skipping comparison, building a custom EC2 inference server, or deploying a multi-Region production architecture first are the opposite of validating feasibility."
+ },
+ "E1-Q56": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 01, Standardising the building blocks",
+  "rationale": "Reusable architecture blueprints and service templates built on the Well-Architected Framework and the Generative AI Lens enforce consistent security, logging and invocation patterns across teams. A shared repository and monthly meetings do not enforce anything, and a single mandatory platform ignores workload differences."
+ },
+ "E1-Q63": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Model invocation logging to S3 captures prompts, parameters and outputs, and S3 Object Lock in compliance mode makes the seven-year retention tamper-proof; Prompt Management with versioning, approval and role-based access governs the templates centrally. CloudTrail Lake does not store prompt bodies, Redshift retention is custom archival, and Secrets Manager is not a template store."
+ },
+ "E1-Q64": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 04, Keeping the store current",
+  "rationale": "Event-driven Lambda functions triggered by document change notifications reprocess only the modified files, regenerate their embeddings and synchronise through the Knowledge Base ingestion bucket, scaling to thousands of changes an hour. Manual uploads, nightly full rebuilds and hourly Glue crawls all reprocess unchanged content or lag the updates."
+ },
+ "E1-Q69": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 04, Metadata frameworks",
+  "rationale": "Storing timestamps and document types as S3 object metadata, adding custom attributes for authorship and domain, and exposing them as filterable fields in the vector store lets retrieval filter and rank on context that embeddings do not capture. Title-only string matching, appending metadata as text into the embedding, and relying purely on similarity ignore the attributes."
+ },
+ "E2-Q9": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Inference parameters",
+  "rationale": "The stop sequences parameter tells Bedrock to halt generation the moment the model emits the specified string, enforced by the API rather than by the prompt. Prompt instructions are unreliable, and top-k or temperature change randomness but never stop generation."
+ },
+ "E2-Q11": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 04, The AWS options",
+  "rationale": "A Bedrock Knowledge Base connected to the private data sources adds retrieval-augmented grounding at query time, integrates directly with Bedrock, scales automatically and needs no retraining. Comprehend entity models do not retrieve, fine-tuning changes style not facts and would require repeating for every policy change, and context window or temperature settings cannot supply data the model never saw."
+ },
+ "E2-Q13": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Prompt Management supplies parameterised, versioned templates with an approval process, S3 provides the central template repository, CloudTrail tracks who accessed or invoked prompts, and CloudWatch Logs records usage, satisfying every control. DynamoDB point-in-time recovery is not version control, environment variables are not governance, and CodeCommit with manual reviews lacks the audit trail of invocations."
+ },
+ "E2-Q17": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Prompt Management stores reusable, version-controlled templates with variables for the retrieved Kendra results and per-prompt inference parameters such as temperature and max tokens, so each care pathway gets its own settings without application changes. Lambda environment variables are not version control, tracking versions in Git outside Flows is manual, and CreateModelCustomizationJob is fine-tuning, not prompt reuse."
+ },
+ "E2-Q20": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 03, Improve the input to improve the output",
+  "rationale": "Using Bedrock to reformat and clean the text, Comprehend to extract entities such as names and account identifiers, and Lambda to normalise and assemble a consistent structured input is the input-enhancement pipeline the task statement describes. Forwarding raw text unchanged, relying on the model to clean implicitly, or extracting entities while ignoring formatting leaves the noise that degrades output quality."
+ },
+ "E2-Q23": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 05, Making results more relevant",
+  "rationale": "Hybrid search in OpenSearch combines BM25 keyword scoring with vector similarity so both exact terms and semantic matches surface, and a Bedrock reranker rescoring the top candidates supplies the required secondary relevance step. DynamoDB keyword filtering with client-side vectors, keyword-only Knowledge Base retrieval, and vector-only pgvector each miss one side of the requirement."
+ },
+ "E2-Q24": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 04, The AWS options",
+  "rationale": "Amazon Kendra with the S3 connector is a fully managed semantic search service that indexes terabytes of documents and ranks passages by meaning without an embedding pipeline to build or maintain. Custom embeddings in DynamoDB with scans, Feature Store with SQL filtering, and Redshift tables are not semantic retrieval layers. Note that Kendra is no longer open to new customers; in a fresh design the same requirement points to Bedrock Knowledge Bases."
+ },
+ "E2-Q25": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 05, Deploying vector search",
+  "rationale": "Amazon OpenSearch Service provides high-dimensional vector storage, real-time indexing and approximate nearest-neighbour search across millions of vectors, and works with Bedrock retrieval. Lambda-computed cosine similarity over DynamoDB, client-side search over S3 JSON, and pgvector without an ANN index cannot meet the latency and scale requirements."
+ },
+ "E2-Q34": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 06, What a good prompt contains",
+  "rationale": "Structured input components, output specification templates, chain-of-thought instruction patterns and a feedback loop from user ratings are the prompt-refinement techniques for inconsistent reasoning, formatting and omissions. JSON mode with temperature alone does not fix reasoning, manual prompt selection by analysts is not systematic, and fine-tuning on complaints without changing the prompting strategy is slow and expensive."
+ },
+ "E2-Q45": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 05, Choosing and generating embeddings",
+  "rationale": "Amazon Titan Text Embeddings in Bedrock generates semantic vectors for documents and queries in a fully managed way, and storing them in the existing OpenSearch Service cluster gives the agents their retrieval layer. A JumpStart summariser, Kendra indexing, and Data Wrangler clustering do not produce embeddings for the firm's OpenSearch index."
+ },
+ "E2-Q48": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Customising models and managing their lifecycle",
+  "rationale": "SageMaker multi-adapter inference deploys the base model once and registers each regional LoRA adapter as its own inference component on the same endpoint, and the invocation names the adapter to apply. Multi-model endpoints treat each as a full model, EFS mounting and Lambda weight injection are custom hacks that do not select adapters per request."
+ },
+ "E2-Q49": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 06, Instruction frameworks: prompts plus guardrails",
+  "rationale": "Prompt Management enforces the advisory role, response structure and disclaimers centrally across prompts, and Bedrock Guardrails denied topics block prohibited investment discussions while content policies enforce responsible behaviour. Hardcoding text in every template, routing by topic in Step Functions, and injecting text in Lambda are neither centralised nor enforceable."
+ },
+ "E2-Q50": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "Bedrock Data Automation extracts structured insights from text, images, audio and video, Knowledge Bases indexes that enriched content for multimodal semantic retrieval, and the retrieved context is passed to the SageMaker-hosted model for generation. Querying DynamoDB directly is not semantic search, having the model interpret raw OpenSearch results skips the retrieval layer, and feeding the whole dataset at inference time ignores context limits."
+ },
+ "E2-Q51": {
+  "answer": "D",
+  "confidence": "medium",
+  "section": "Unit 03, Validate before you generate",
+  "rationale": "A Glue ETL job connects to the on-premises SQL Server over JDBC through the existing Site-to-Site VPN, selects only the non-sensitive columns, and writes the sanitised dataset to S3 on a daily schedule, so restricted fields never leave the facility. Kinesis is for streaming, DMS replicates whole tables and is meant for migration rather than a filtered daily extract, and DataSync would first export full data including restricted fields. (See the paragraph \"Data that lives on premises\" in that section.)"
+ },
+ "E2-Q52": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 04, The AWS options",
+  "rationale": "Bedrock Knowledge Bases handles hierarchical (parent-child) document organisation with automatic embedding generation and native prompt augmentation, and OpenSearch Service with the Neural plugin adds topic-based segmentation and high-performance semantic retrieval, matching skill 1.4.1 word for word. Manual similarity in application code, keyword-only OpenSearch without vectors, and Athena keyword search are not semantic retrieval."
+ },
+ "E2-Q54": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 05, Handling the query",
+  "rationale": "Normalising queries (punctuation, stopwords, abbreviations) produces consistent embeddings, and a hybrid pipeline in OpenSearch Serverless that combines vector search with BM25 and document-type weights improves both relevance and speed. Embedding every sentence bloats the index, CloudTrail Lake cannot tune shards, and routing all queries to the FM removes retrieval entirely."
+ },
+ "E2-Q58": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 06, Quality assurance for prompts",
+  "rationale": "Lambda functions validate expected output fields, Step Functions orchestrates edge-case prompt tests, and CloudWatch Logs detects regression patterns across prompt versions, which is the QA system in skill 1.6.4. CodeBuild unit tests on prompt text do not test model behaviour, GuardDuty is a threat detector, and manual console review does not scale or automate."
+ },
+ "E2-Q62": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Inference options",
+  "rationale": "A Bedrock cross-Region inference profile automatically routes requests to Regions with available capacity during surges, with no separate model instances to manage, and geographic profiles keep data within the required geography for residency. SageMaker multi-Region endpoints with Route 53, separate Bedrock deployments with a custom SDK, and pre-copying logs all add infrastructure and operations."
+ },
+ "E2-Q67": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "Amazon Transcribe converts the multilingual audio and video to text, Amazon Translate produces English, and a Bedrock LLM such as Claude or Jamba summarises, all managed and auto-scaling with nothing to build. A custom end-to-end SageMaker model, an embedding model for transcription, and Glue plus Lex misuse the services."
+ },
+ "E2-Q69": {
+  "answer": "B",
+  "confidence": "medium",
+  "section": "Unit 04, Keeping the store current",
+  "rationale": "S3 Event Notifications invoking a Lambda function on object-created and object-deleted events, which calls IngestKnowledgeBaseDocuments and DeleteKnowledgeBaseDocuments, is event-driven and near-immediate with no schedules, which is what the stem demands. Option A is the SQS-buffered variant that the official practice question (PQ-Q13) keys as the resilient design; here the option describes the Lambda function as polling the queue while the stem says to avoid polling, and the ExamPro key follows that wording. Technically an SQS event source mapping does poll the queue on Lambda's behalf, so the two designs differ in wording more than architecture: when a stem stresses resilience and buffering, choose the SQS variant; when it stresses avoiding polling and the option itself says \"poll\", choose the direct path. The two scheduled options poll S3 or rescan the whole bucket and are wrong either way."
+ },
+ "E3-Q2": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 04, Metadata frameworks",
+  "rationale": "A standard metadata schema stored as S3 object tags and user-defined metadata, mapped by the ingestion pipeline into structured fields in the vector index and used as filters and boosts, improves precision and enforces access level with minimal application logic. Parsing folder names in code, embedding metadata as text, and inferring relevance from CloudTrail access frequency are fragile substitutes."
+ },
+ "E3-Q3": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 04, Performance at scale",
+  "rationale": "OpenSearch Service with the Neural plugin, sharding across nodes for distributed scale, and multiple specialised indexes for domain routing meets fast similarity search, domain specialisation and availability under ingestion spikes. A single minimally sharded index, SQL cosine similarity in RDS, and DynamoDB binary attributes with Lambda cannot scale to hundreds of millions of embeddings."
+ },
+ "E3-Q5": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 02, Customising models and managing their lifecycle",
+  "rationale": "Model Registry registers every LoRA-tuned variant with versions, approval status and metadata so only Approved versions are promoted, and a SageMaker Pipelines and CodePipeline CI/CD pipeline deploys them with blue/green or canary strategies, rolls back on alarms, and retires deprecated versions on a schedule. Spreadsheets, prompt-level flags on Provisioned Throughput, and timestamp-based adapter loading have no approval or rollback."
+ },
+ "E3-Q6": {
+  "answer": "A",
+  "confidence": "medium",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "EventBridge triggering Lambda when new CRM data lands in S3, with Lambda preprocessing, calling Comprehend for sentiment and entities, and pushing enriched output to SageMaker retraining, is the scalable event-driven pipeline with no manual ETL. Bedrock Data Automation extracts insights from unstructured documents, images, audio and video; it is not a continuous ingestion and enrichment engine for CRM records, so option B misapplies it even though it reads well. Data Wrangler with manual triggers and weekly notebooks are manual."
+ },
+ "E3-Q9": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 06, Instruction frameworks: prompts plus guardrails",
+  "rationale": "Prompt Management defines reusable system-prompt templates with role, formatting and style requirements, and Guardrails enforces behavioural constraints and restricted topics across every application. Instructions in each application's code, dynamic prompts controlled by temperature, and Lambda layers of text are not centrally enforceable."
+ },
+ "E3-Q10": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 01, Standardising the building blocks",
+  "rationale": "Reusable Bedrock inference wrappers, prompt-evaluation modules and RAG templates published in an AWS Service Catalog portfolio give every business unit consistent guardrails, validated API patterns and centralised logging while deploying independently, in line with the Generative AI Lens. A single global prompt router centralises traffic not patterns, asking teams to run the lens themselves enforces nothing, and a shared multi-model endpoint is not an architecture standard."
+ },
+ "E3-Q11": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 05, Choosing and generating embeddings",
+  "rationale": "Titan Embeddings with a dimensionality matched to retrieval needs, evaluated with Bedrock benchmarking, and generated at scale by Lambda with batching balances dimensionality, latency, accuracy and infrastructure. Attention values from a generation model are not embeddings, synchronous GPU endpoints inside the ingestion API do not scale, and untested Glue PyTorch jobs into DynamoDB skip suitability testing."
+ },
+ "E3-Q13": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "Comprehend (entities, language), Transcribe (audio transcripts) and Rekognition (image labels and metadata) tag the multimodal archive with no model training, pipelines or infrastructure, and their outputs feed AgentCore workflows. AWS Batch with open-source OCR, SageMaker topic and detection models, and Translate plus Polly plus Lex all require building or misuse the services."
+ },
+ "E3-Q18": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 03, Validate before you generate",
+  "rationale": "Glue Data Quality rulesets on Data Catalog datasets, embedded in Glue ETL jobs that fail or quarantine bad records and publish results to CloudWatch, enforce reusable rules for FM inputs; Data Wrangler flows in SageMaker Pipelines profile and validate the training and batch inference datasets. Guardrails filter content not data quality, S3 lifecycle rules do not validate, and a Lambda string-length check that never blocks is not validation."
+ },
+ "E3-Q23": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 06, Interactive systems that keep context",
+  "rationale": "Step Functions builds the clarification and fallback workflows, Comprehend performs intent recognition, and DynamoDB stores conversation history for retrieval into prompts, with minimal custom orchestration code. SQS FIFO with RDS, Kinesis to S3 with Athena reconstruction, and CloudWatch Logs with in-memory context are not conversation-state designs."
+ },
+ "E3-Q24": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Designing for failure",
+  "rationale": "Cross-Region inference with a fallback Region covers a model available in one Region, and Step Functions circuit breaker patterns reroute during failures and degrade gracefully when the primary model is unavailable. A single EC2 instance, self-managed Kubernetes replacing Bedrock, and endless retries against the same Region do not provide failover."
+ },
+ "E3-Q34": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 04, Performance at scale",
+  "rationale": "CloudWatch metrics monitor vector store latency and index saturation, and EventBridge with Lambda automates index rebuild or compaction when thresholds are crossed, keeping the store reliable with minimal maintenance. Daily Athena recalculations, Glue similarity sweeps that delete vectors, and manual approval of every embedding are heavy or manual."
+ },
+ "E3-Q35": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 05, Segmenting documents",
+  "rationale": "Semantic chunking forms chunks on meaning rather than fixed size, keeping multi-sentence explanations and multi-step procedures together, and it works within the existing Knowledge Base. Hierarchical chunking is not recommended with S3 Vectors because parent-child metadata hits its size limit, pre-summarising with a larger model adds cost, and single-chunk documents lose precision."
+ },
+ "E3-Q37": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Switching models without code changes",
+  "rationale": "Step Functions inspects the request type and invokes the matching FM behind a single API Gateway endpoint with request transformations, so new specialised models are added to the workflow without changing the client-facing API. Static Lambda routing tables need manual code updates, front-end routing embeds model identifiers in clients, and CloudFront Functions forwarding to per-model API Gateways multiplies endpoints."
+ },
+ "E3-Q38": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 04, Keeping the store current",
+  "rationale": "S3 event notifications for created and updated objects go to an SQS queue, and a SageMaker Processing job consumes it to regenerate embeddings only for the changed documents and update the OpenSearch index, keeping embeddings current with low overhead. Nightly full rebuilds lag and waste compute, manual triggers depend on users noticing, and DynamoDB Streams with Glue rebuilding everything on any change is wasteful."
+ },
+ "E3-Q40": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Prompt Management templates with client-specific parameters and versioning, a mandatory approval workflow before activation, Guardrails enforcing banned phrases and style rules at runtime, and CloudTrail recording template modifications and usage meet every requirement with minimal manual effort. Parameter Store lacks approval workflows, S3 versioning with CloudWatch Logs lacks the review step, and Comprehend classification with SNS notifications is not governance."
+ },
+ "E3-Q41": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 05, Making results more relevant",
+  "rationale": "Knowledge Bases with an OpenSearch Serverless vector store provides hybrid semantic and keyword search with no training, SageMaker preprocessing jobs run in the private VPC, and a single Bedrock inference path behind API Gateway scales automatically with consistent latency and minimal operations. Hosting the FM on SageMaker with Kendra adds GPU management, multi-model fine-tuned endpoints violate the no-fine-tuning rule, and Bedrock does not replace SageMaker preprocessing jobs."
+ },
+ "E3-Q43": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 04, The AWS options",
+  "rationale": "Bedrock Knowledge Bases with a managed vector store connected to the S3 repository handles chunking, embedding, vector search and integration with the FM, scaling as documents and regions grow without OpenSearch clusters or custom indexing logic. Aurora pgvector and OpenSearch with Lambda ingestion require the index management the team wants to avoid, and DynamoDB with application-layer cosine similarity does not scale."
+ },
+ "E3-Q44": {
+  "answer": "B,D",
+  "confidence": "medium",
+  "section": "Unit 05, Giving models one way to retrieve",
+  "rationale": "The question asks for a combination, and two options describe consistent access mechanisms: a retrieval gateway with one standardised API registered as a function-calling tool, and MCP servers per backend with a standardised tool schema and an MCP client in the orchestration layer. Both hide the backend from the model and survive backend changes. Direct SDK calls with conditional logic and per-backend Lambda functions chosen from the prompt couple the model to storage. If forced to pick one, the MCP design is the most standardised."
+ },
+ "E3-Q51": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 04, Performance at scale",
+  "rationale": "Partitioning by domain into specialised vector indexes with category routing searches only the relevant index, and sharding within each index spreads load, which fixes both latency and the dominant-category recall problem. A single filtered index still scans everything, more replicas do not shrink the search space, and pgvector scaled vertically is a worse fit at this scale."
+ },
+ "E3-Q52": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Choosing with evidence",
+  "rationale": "Evaluating candidate FMs with Bedrock evaluation tools using structured benchmarks for reasoning, SQL accuracy, latency and failure cases selects the model on evidence aligned to the workload. Newest, cheapest and largest context window are assumptions the question explicitly rejects."
+ },
+ "E3-Q56": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 02, Designing for failure",
+  "rationale": "A Step Functions circuit breaker detects repeated timeouts or throttling and routes to a graceful degradation branch (smaller FM or cached responses), and cross-Region inference shifts traffic to a secondary Region automatically when the primary is constrained, both without manual failover. Only raising Provisioned Throughput ignores Regional degradation, a duplicate pipeline needing a feature-flag flip is manual, and Route 53 weighting between two API Gateways in one Region does not escape that Region."
+ },
+ "E3-Q57": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Prompt Management for parameterised templates and approval, S3 for the approved template repository, CloudTrail for Bedrock API usage tracking and CloudWatch Logs for prompt access logging is the managed governance stack named in skill 1.6.3. DynamoDB with Step Functions approvals and X-Ray, API Gateway usage plans with CodeCommit, and Lambda versioning with email approvals are custom governance code."
+ },
+ "E3-Q61": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Switching models without code changes",
+  "rationale": "AWS AppConfig stores the active FM and provider, and the Lambda function reads it at runtime, so product teams switch models dynamically for experiments, failover or capacity constraints with no code change, deployment or interruption. DynamoDB plus redeploys, an S3 file read only at cold start, and per-model API Gateway stages all require redeployment or client changes."
+ },
+ "E3-Q62": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Designing for failure",
+  "rationale": "A Step Functions circuit breaker halts the workflow after repeated Bedrock failures, a Choice state enforces output-length stopping conditions, and Lambda timeouts cap downstream processing, preventing runaway generations and excessive retries without operators. Requeuing oversized responses, Lambda concurrency limits, and CloudWatch alarms with manual restarts do not enforce execution boundaries automatically."
+ },
+ "E3-Q64": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "SageMaker Processing jobs run batch preprocessing scripts for all modalities, with Amazon Transcribe converting audio to text and image preprocessing inside the container, producing normalised text, image tensors and metadata for the multimodal FM with no custom infrastructure. One Lambda for everything hits size and time limits, Bedrock alone does not preprocess raw media, and Glue to Parquet is not an FM input format for images and audio."
+ },
+ "PQ-Q5": {
+  "answer": "A",
+  "confidence": "official",
+  "section": "Unit 04, The AWS options",
+  "rationale": "An S3 vector bucket with vector indexes stores fifty million image embeddings at the lowest cost with no infrastructure, and its sub-second query latency is fine for infrequent similarity searches. RDS pgvector and OpenSearch Serverless cost more for a rarely queried index, and DynamoDB with Lambda similarity is not a vector search solution."
+ },
+ "PQ-Q6": {
+  "answer": "A,E",
+  "confidence": "official",
+  "section": "Unit 06, Governance of prompts",
+  "rationale": "Prompt Management with multi-stage approval and IAM multi-party authorization governs the templates, and model invocation logging to S3 with Object Lock compliance mode set to seven years gives comprehensive, tamper-proof invocation records with per-unit prefixes. EventBridge does not capture invocation payloads, CloudTrail records API calls without prompt bodies, and DynamoDB templates need custom approval logic."
+ },
+ "PQ-Q9": {
+  "answer": "D",
+  "confidence": "official",
+  "section": "Unit 02, Inference parameters",
+  "rationale": "The stop sequences parameter in the inference call makes the model stop generating when the specified phrase appears. Prompt text is advisory, and top-k or temperature adjust sampling randomness rather than stopping output."
+ },
+ "PQ-Q11": {
+  "answer": "B,D",
+  "confidence": "official",
+  "section": "Unit 05, Making results more relevant",
+  "rationale": "Knowledge Bases hybrid search on OpenSearch Serverless combines vector similarity with keyword matching, and Bedrock reranker models with OpenSearch reorder results by semantic relevance, both managed and low overhead. Kendra Intelligent Ranking with JumpStart, a custom pgvector scoring algorithm, and a Learning-to-Rank integration are custom or higher-overhead paths."
+ },
+ "PQ-Q12": {
+  "answer": "A",
+  "confidence": "official",
+  "section": "Unit 02, Inference options",
+  "rationale": "Cross-Region inference distributes requests across Regions in the geography with the same model and API, removing peak-time throttling at on-demand prices with no extra infrastructure. A Lambda fallback adds custom code, Provisioned Throughput costs more, and prompt routing changes the model."
+ },
+ "PQ-Q13": {
+  "answer": "C",
+  "confidence": "official",
+  "section": "Unit 04, Keeping the store current",
+  "rationale": "S3 Event Notifications to an SQS queue, consumed by a Lambda function that calls IngestKnowledgeBaseDocuments for new objects and DeleteKnowledgeBaseDocuments for deleted ones, is event-driven and resilient because the queue buffers bursts and retries failures. Scheduled Lambda polling adds delay, re-running StartIngestionJob every five minutes rescans everything, and invoking Lambda directly from S3 lacks the queue's buffering."
+ },
+ "PQ-Q16": {
+  "answer": "C",
+  "confidence": "official",
+  "section": "Unit 03, Process every modality into model-ready form",
+  "rationale": "Step Functions orchestrates Bedrock multimodal FMs to analyse the videos and photos, results land in S3, and a QuickSight dashboard summarises trends, all managed with the least overhead. Training Rekognition Custom Labels is unnecessary effort, Claude on text descriptions plus Stable Diffusion misuses an image generator for analysis, and Quick Suite in Lambda is not the analysis engine."
+ }
+}

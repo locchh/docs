@@ -1,0 +1,212 @@
+{
+ "E1-Q19": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Why GenAI evaluation is different",
+  "rationale": "An automated evaluation framework built on golden reference datasets with expected outputs, relevance scoring functions, factual-accuracy benchmarking prompts for a judge model, and consistency checks through multi-pass output diffing measures relevance, factual accuracy, consistency across regenerations and fluency repeatably with almost no manual scoring. A QuickSight dashboard of writing style and length trends measures nothing about correctness, CloudTrail-driven alerts on long responses are not an accuracy signal, and daily manual review is the manual scoring the institute wants to minimise."
+ },
+ "E1-Q8": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 01, Amazon Bedrock Evaluations",
+  "rationale": "Amazon Bedrock Model Evaluations runs the candidate FMs and prompt variants against the same dataset and produces managed reports with quality metrics, latency and token usage, from which cost-performance and latency-to-quality ratios follow, so the team picks the best model and prompt combination without building experimentation infrastructure. CloudTrail with EventBridge and periodic sampling does not measure quality, three models in production with surveys and billing exports is slow and manual, and a Kinesis-Lambda-Athena A/B engine is exactly the custom infrastructure the requirement excludes."
+ },
+ "E3-Q69": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Amazon Bedrock Evaluations",
+  "rationale": "A Bedrock model evaluation job over the grouped prompt dataset with robustness metrics enabled measures semantic robustness, how much the responses change across closely related prompt variants, as a managed quantitative analysis. Batch inference plus cosine similarity in Athena, a Step Functions paraphrasing loop with manual analysis, and a SageMaker Processing job with a custom drift score are all custom evaluation pipelines the team wants to avoid."
+ },
+ "E3-Q54": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, Amazon Bedrock Evaluations",
+  "rationale": "LLM-as-a-judge in Amazon Bedrock Model Evaluation scores each model's generated descriptions at scale against built-in and custom metrics for policy compliance, contextual safety, multilingual accuracy and consistency, with explanations, which handles the volume and linguistic diversity that manual review and regex cannot. Keyword and regex counts in Lambda miss meaning and languages, vector similarity in OpenSearch measures consistency but not safety or compliance, and RAG evaluation of knowledge bases assesses retrieval grounding rather than generated listing quality."
+ },
+ "E3-Q15": {
+  "answer": "B",
+  "confidence": "medium",
+  "section": "Unit 01, Comparing configurations systematically",
+  "rationale": "The requirement is to compare several FM variants simultaneously on real user interactions and choose the best, which is an A/B testing framework: production traffic is split in parallel across the candidates, outputs are scored with Comprehend sentiment and entity signals plus SageMaker engagement predictors, and the winner is selected after statistical comparison, without removing the current experience for anyone. A canary exposes one version at a time to a small slice for safe release rather than comparing many, a linear rollout likewise promotes one version, and blue/green runs variants sequentially in staging, so none compares all variants at once on live interactions."
+ },
+ "E1-Q34": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 01, Evaluating RAG and retrieval",
+  "rationale": "Retrieval relevance tests that compare retrieved passages against a labelled evaluation dataset, with relevance and context-matching scores tracked in Bedrock Model Evaluations or custom CloudWatch metrics, validate retrieval quality repeatably, and vector database performance metrics for retrieval latency, index scan time and throughput with CloudWatch thresholds detect degradation and drive optimisation. Query-expansion heuristics judged by output fluency measure the wrong thing, CloudTrail call volumes say nothing about relevance, and weekly manual review of exported chunks is neither repeatable nor low-overhead."
+ },
+ "E1-Q22": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 01, Evaluating RAG and retrieval",
+  "rationale": "An LLM-as-a-Judge assessment with a Bedrock model rating clarity, reasoning quality and citation strength, integrated into the CI/CD evaluation stage, and RAG evaluation workflows that compare outputs with the retrieved ground-truth context using Bedrock Model Evaluations with custom metrics for relevance, grounding and factual alignment, together assess the outputs from multiple perspectives with managed services and leave room for structured human feedback. Unstructured feedback mined from logs, CloudWatch token and latency patterns treated as quality, and a manager's subjective spot-check of S3 samples are not evaluation systems."
+ },
+ "E3-Q70": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, Evaluating agents",
+  "rationale": "Amazon Bedrock Agent evaluations run automated task-completion tests, score tool-use accuracy at each step and analyse reasoning quality across multi-step workflows, so weak points in a new agent configuration are found and compared across versions before deployment. Indexing historical outputs in Kendra compares text rather than behaviour, manual review of tool call logs in CloudWatch does not scale or measure reasoning, and SageMaker Experiments tracks configuration metadata rather than evaluating agent tasks."
+ },
+ "E1-Q41": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 02, Learning from users",
+  "rationale": "A feedback interface embedded in the editor that captures ratings, categorical issue tags and inline annotations, stores the events in DynamoDB and is analysed periodically to refine prompts and configurations gives writers a direct, structured channel that integrates with the existing application with minimal infrastructure and drives continuous improvement. A daily Glue heuristic job and QuickSight dashboard measure without user input, weekly manual inspection of S3 exports is neither structured nor scalable, and CloudTrail invocation summaries contain no quality feedback."
+ },
+ "E1-Q67": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 02, Continuous evaluation and quality gates",
+  "rationale": "A continuous evaluation workflow that runs Amazon Bedrock Model Evaluations against a golden dataset on every deployment, with regression thresholds in the CI/CD pipeline and automated quality gates that block releases when accuracy, consistency or fluency fall below baselines, detects regressions and prevents low-quality configurations from being promoted using managed services. Lambda checks on response length are not quality measures, a Glue heuristic score reviewed by a manager is manual, and weekly spot-checks provide no automated gating."
+ },
+ "E2-Q41": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Reporting to stakeholders",
+  "rationale": "Bedrock Model Evaluation reports supply the quality scores, CloudWatch holds latency and cost metrics, QuickSight builds the visual dashboards that compare model accuracy, latency trends, cost per output and quality over time, and QuickSight's scheduled reports email weekly summaries, all managed and scaling automatically. Manual weekly SageMaker notebooks, a custom React dashboard with Lambda-emailed CSVs, and OpenSearch visualisations exported as screenshots are the bespoke reporting infrastructure the team must avoid."
+ },
+ "E2-Q1": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Validating a deployment",
+  "rationale": "Automated deployment validation with synthetic user workflows against the new FM version, an AI-specific output validation pipeline that scores hallucination and consistency metrics, and quality gates that block rollout when semantic drift from baseline is detected runs automatically before deployment and simulates real user behaviour, as required. Token-usage anomaly detection says nothing about hallucinations or structure, Ground Truth human review after each deployment is manual and too late, and developers voting in a spreadsheet is neither automated nor rigorous."
+ },
+ "E3-Q26": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Validating a deployment",
+  "rationale": "SageMaker Model Monitor with custom quality metrics on a shadow deployment scores the new model's outputs on a copy of live traffic during rollout, detects semantic shifts or degraded quality in real time and raises alerts before inconsistencies affect large volumes of traffic, and it plugs into the CI/CD process without disturbing production. A synthetic workflow generator with golden datasets tests before release but does not watch live rollout traffic, SageMaker Experiments compares versions offline, and MLflow tracks metadata and detects anomalies only after the fact."
+ },
+ "PQ-Q17": {
+  "answer": "Define metrics → create test dataset → A/B testing → quality gates → analyse and report",
+  "confidence": "official",
+  "section": "Unit 02, The sequence the exam expects",
+  "rationale": "The sequential validation order is: define the evaluation metrics for relevance, factual accuracy and fluency; create the test dataset with diverse scenarios and edge cases; conduct A/B testing of the new model against the production model; implement automated quality gates with Step Functions; and finally analyse the results and generate the comprehensive evaluation report. Each step depends on the approved output of the previous one: the metrics decide what the dataset must cover, the dataset is what the A/B test runs on, the gates enforce the thresholds the test defines, and the report is written once every stage has passed."
+ },
+ "E2-Q40": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 03, Content handling: when the model does not see everything",
+  "rationale": "Context window overflow diagnostics detect when transcripts exceed the model's limit, a dynamic chunking strategy segments them on token boundaries so every part is processed, and prompt design adjustments stitch the partial summaries consistently, which ensures full coverage without shortening transcripts or rewriting the summarisation logic. CloudTrail alerts on file size do not process the content, manual shortening violates the business requirement, and compressing files does not reduce the tokens the model must read."
+ },
+ "E3-Q28": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 03, Content handling: when the model does not see everything",
+  "rationale": "Turning on document splitting in the Bedrock Data Automation project makes BDA process each page or logical document independently and match it to a blueprint, and keeping exactly one clear blueprint per document type category makes that matching unambiguous, which fixes the skipped and misclassified pages without new processing logic. Ingesting full PDFs through Textract or pre-classifying with Rekognition OCR adds custom logic, and multiplying blueprint variants makes matching more ambiguous."
+ },
+ "E2-Q16": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, FM integration issues",
+  "rationale": "Structured error logging and request validation for every Bedrock call, with model invocation logging enabled to capture the exact requests and responses, schema checks on payloads before they reach the model, and malformed responses stored for automated analysis, gives the team the evidence to diagnose intermittent malformed and silent failures with minimal infrastructure. Periodic synthetic queries written to DynamoDB for manual inspection do not capture the real failures, CloudTrail with SNS on every InvokeModel is noise rather than diagnostics, and manual reproduction with wiki notes is not a method."
+ },
+ "E2-Q6": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 03, FM integration issues",
+  "rationale": "AWS X-Ray traces show where each request spends its time, separating upstream validation logic, AWS SDK retries and the Bedrock model invocation, and CloudWatch Logs Insights queries over the prompt and response logs reveal malformed inputs and other pattern anomalies, which together locate the latency spikes and inconsistent responses. CloudTrail records API activity rather than latency breakdowns, a longer Lambda timeout hides the symptom, and custom scripts over DynamoDB add infrastructure without tracing."
+ },
+ "E2-Q64": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 03, Prompt engineering problems",
+  "rationale": "A prompt testing framework that runs controlled evaluations across prompt versions on a fixed set of products, compares output consistency and measures quality changes with automated scoring gives a structured, low-manual method to diagnose the revision and validate improvements before deployment. Fine-tuning the model to fix a prompt problem is expensive and indirect, manual wording adjustments on a small batch are trial and error, and raising temperature increases variation rather than diagnosing it."
+ },
+ "E1-Q26": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "Every component succeeds yet nothing matches, which is the signature of query embeddings that no longer share a vector space with the stored document embeddings: the updated Lambda function uses a different embedding model or version, so similarity scores collapse and the system falls back to 'no relevant information'. A temperature change affects generation rather than retrieval, a missing IAM permission would produce access errors in the logs and traces, and deleted embeddings would show an empty index rather than a healthy cluster with normal query performance."
+ },
+ "E2-Q59": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "Reviewing and validating the chunking and preprocessing pipeline (consistent boundaries, clean metadata, proper segmentation of the refreshed guideline text) addresses the retrieval-specific failures introduced by the data refresh, and analysing retrieved-context relevance against the queries while evaluating embedding vectors for drift against historical similarity distributions detects embedding or vector drift. Raising max tokens changes generation rather than retrieval, switching embedding models without diagnostics guesses, and CloudTrail records API calls rather than retrieval quality."
+ },
+ "E3-Q49": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "SageMaker Model Monitor with a custom container computes embedding-drift statistics by comparing production embeddings with stored baseline vectors and exports the reports to S3, and a parallel embedding endpoint with Data Capture enabled, receiving a gradually shifted share of traffic through UpdateEndpointWeights, lets the team analyse captured embeddings in Model Monitor and validate a retrained model before replacing production. A Comprehend classifier rewriting vector entries without baselines measures nothing, nightly batch transforms with manual comparison are not monitoring, and autoscaling addresses capacity rather than drift."
+ },
+ "E1-Q6": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "Knowledge base logging with CloudWatch Logs as the destination records the outcome of every ingested document, so CloudWatch Logs Insights can search for parsing errors, missing metadata and vectorisation failures and analyse ingestion patterns across all S3 sources. Model invocation logging covers inference calls rather than ingestion, CloudTrail records knowledge base API calls rather than per-document processing results, and CloudWatch Application Signals monitors application performance rather than knowledge base ingestion."
+ },
+ "E2-Q32": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 03, Prompt maintenance issues",
+  "rationale": "An X-Ray prompt observability pipeline traces each prompt's path, identifies which templates fail and surfaces latency or structure anomalies, and CloudWatch Logs for all Bedrock invocations let the team analyse prompt-response pairs to detect confusion patterns and formatting failures per template, which together give systematic observability with minimal manual review. Raising the inference timeout, switching to a larger model without diagnostics and disabling schema validation all hide the problem instead of finding it."
+ },
+ "E2-Q47": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 03, Watching tools and agents while troubleshooting",
+  "rationale": "CloudWatch metrics for tool invocation duration, success rate, retry counts and error categories with anomaly detection against historical patterns track tool call patterns and flag unusual behaviour, and Bedrock model invocation logs for the agent and its tools in CloudWatch Logs with dashboards visualise call sequences, coordination behaviour and performance, all managed with the least overhead. A Glue-to-Redshift daily pipeline, a Firehose-Lambda-OpenSearch stream and an external platform fed through CloudTrail Lake are custom infrastructure."
+ },
+ "E3-Q31": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 03, The troubleshooting toolkit",
+  "rationale": "CloudWatch Logs Insights centralises and queries logs from every component, AWS X-Ray traces requests through the GenAI microservices and external integrations so cross-service error chains and slowdowns are attributable, and Amazon Q Developer analyses the logs for FM-related error patterns and anomalies, accelerating debugging without custom ML or specialised infrastructure. Training a SageMaker anomaly model, orchestrating error capture with Step Functions and SNS, and streaming logs through Kinesis into OpenSearch dashboards are the heavier alternatives."
+ },
+ "E3-Q7": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 01, Comparing configurations systematically",
+  "rationale": "A SageMaker multi-variant endpoint hosts all candidate recommendation models behind one endpoint, assigns traffic weights for A/B testing, collects the click-through metrics per variant, and shifts 100 percent of traffic to the winner by updating the weights, with no custom infrastructure. EC2 fleets behind a Network Load Balancer with manual weight changes are self-managed, API Gateway weighted rules across separate endpoints add a routing layer to maintain, and CodeDeploy blue/green alternates whole versions rather than weighting traffic among several models."
+ },
+ "E3-Q19": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Continuous evaluation and quality gates",
+  "rationale": "Automated quality gates integrated with the CI/CD pipeline run regression tests against golden datasets through a Bedrock-based evaluation workflow for every FM version, validate response quality and consistency, and block deployment when metrics fall below thresholds, all without human review. A/B testing on customer traffic exposes customers to the regression, Amazon A2I is a manual human-review process, and CloudWatch alerts on invocation distributions detect problems after deployment rather than preventing them."
+ },
+ "PQ-Q7": {
+  "answer": "D",
+  "confidence": "official",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "Knowledge base logging with CloudWatch Logs as the destination captures per-document ingestion results, and CloudWatch Logs Insights queries find the documents that failed processing across the S3 buckets. CloudTrail records the API calls rather than document outcomes, model invocation logging covers inference rather than ingestion, and CloudWatch Application Signals monitors application performance rather than knowledge base ingestion."
+ },
+ "PQ-Q10": {
+  "answer": "C",
+  "confidence": "official",
+  "section": "Unit 03, Retrieval system issues",
+  "rationale": "With no errors, successful FM invocations, a healthy cluster and normal latency, the only failure that produces generic 'no relevant information' answers is a mismatch between the embedding model used for queries and the one used for the stored documents: the updated Lambda function calls a different embedding model version, so similarities collapse. A missing IAM permission would raise access errors, temperature affects generation rather than retrieval, and deleted embeddings would leave an empty index."
+ },
+ "E3-Q16": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 03, The troubleshooting toolkit",
+  "rationale": "An automated evaluation workflow that uses golden datasets with expected outputs to measure hallucinations, output diffing to compare reasoning variations across runs, and Bedrock model invocation logs to trace intermediate reasoning paths gives systematic detection of inconsistent reasoning, tone shifts and hallucinations with minimal manual review during development. Manual inspection of CloudTrail logs and human approval of every summary are manual, and CPU or memory alarms on the compute environment cannot see reasoning quality."
+ },
+ "E2-Q4": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, The troubleshooting toolkit",
+  "rationale": "Enabling Bedrock invocation logging for FM interaction detail, integrating X-Ray tracing across the retrieval and orchestration workflow, publishing business-impact metrics such as clinician time saved to CloudWatch, and unifying everything on CloudWatch dashboards gives the complete observability view with managed services and minimal integration work. A DynamoDB-plus-QuickSight custom layer, a Kinesis-Athena custom console, and CloudTrail exports with scheduled Lambda reports are separate monitoring systems built by hand."
+ },
+ "E2-Q37": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 03, The troubleshooting toolkit",
+  "rationale": "Pushing user interaction events, conversion signals and recommendation outcomes to CloudWatch metrics with business-impact dashboards and anomaly detection alarms covers interaction tracking and proactive insight, and Bedrock Model Invocation Logs in CloudWatch Logs with dashboards capture request and response traces for model behaviour patterns, prompt-response correlations and performance KPIs, giving forensic traceability, all managed. An EMR pipeline over S3 exports, a Kinesis-Lambda-DynamoDB layer and CloudTrail forwarding to an external SIEM are custom analytics pipelines."
+ },
+ "E3-Q60": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 03, The troubleshooting toolkit",
+  "rationale": "Bedrock Model Invocation Logs give detailed request and response analysis, CloudWatch metrics track token usage, hallucination indicators and prompt-effectiveness KPIs, and CloudWatch anomaly detection with dashboards proactively flags irregular token spikes and drift while correlating quality with token consumption in one managed interface. Exporting to S3 with a Lambda evaluation engine and QuickSight is a custom pipeline, CloudTrail data events with EventBridge and daily digests do not evaluate hallucinations, and Firehose into Model Monitor is built for feature drift on hosted models rather than FM invocation quality."
+ },
+ "E2-Q8": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, Comparing configurations systematically",
+  "rationale": "Adding the upgraded model to the existing SageMaker endpoint as an additional production variant with a small initial variant weight routes a small share of live traffic to it behind the same endpoint and API contract, so precision and latency can be compared under real load and the weight shifted gradually with no client change and no extra infrastructure. A second endpoint with dashboards forces client or routing changes, API Gateway weighted forwarding adds a routing hop and a second endpoint to maintain, and a Lambda that swaps the endpoint configuration after a window is a cutover rather than gradual testing."
+ }
+}

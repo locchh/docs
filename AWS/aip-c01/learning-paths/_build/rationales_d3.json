@@ -1,0 +1,296 @@
+{
+ "PQ-Q2": {
+  "answer": "B",
+  "confidence": "official",
+  "section": "Unit 01, Amazon Bedrock Guardrails: the managed safety layer",
+  "rationale": "Enabling the trace in guardrailConfig returns a per-request assessment that names the exact policy, filter, topic or PII type that fired and at what confidence, and the InvocationsIntervened metric broken down by the GuardrailPolicyType dimension (ContentPolicy, TopicPolicy, SensitiveInformationPolicy) shows which policy is intervening over time, which is what tuning needs. The GuardrailContentSource dimension only says whether the input or the output triggered, model evaluation jobs measure model quality rather than guardrail decisions, and invocation logging records the request and response, not the guardrail's reasoning."
+ },
+ "E2-Q5": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Amazon Bedrock Guardrails: the managed safety layer",
+  "rationale": "Trace enabled on each invocation returns the guardrail assessment that identifies the intervening policy and its confidence, and the CloudWatch InvocationsIntervened metric filtered by GuardrailPolicyType (ContentPolicy, TopicPolicy, SensitiveInformationPolicy) separates content safety, PHI detection and topic restrictions, which is the most granular real-time view. The GuardrailContentSource dimension distinguishes only input from output, invocation logs do not carry policy-type dimensions, and evaluation scorecards are offline tests rather than per-invocation diagnostics."
+ },
+ "PQ-Q1": {
+  "answer": "D",
+  "confidence": "official",
+  "section": "Unit 01, Amazon Bedrock Guardrails: the managed safety layer",
+  "rationale": "An IAM policy on every role that calls Bedrock, with the bedrock:GuardrailIdentifier condition key on InvokeModel and Converse, denies any call that does not name the approved guardrail, enforcing compliance with no additional infrastructure or code path. Adding the bedrock:PromptRouterArn condition requires prompt routing, which has nothing to do with guardrail compliance; a Lambda proxy or a Parameter Store lookup adds components that can be bypassed and must be maintained."
+ },
+ "E3-Q1": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 01, Amazon Bedrock Guardrails: the managed safety layer",
+  "rationale": "Bedrock Guardrails is the fully managed compliance layer: content filters block harmful or restricted content, word filters block the illegal or prohibited terms, and grounding checks keep responses tied to approved sources, all configured without engineering effort. In practice sensitive information filters are the policy that prevents disclosure of financial details, so the option's use of contextual grounding for that purpose is loose, but it is still the only option that uses the managed guardrail policies; Macie scans S3 rather than responses, WAF filters web requests rather than model content, and Clarify reports on model bias rather than unsafe responses."
+ },
+ "E1-Q35": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Custom moderation workflows",
+  "rationale": "Bedrock Guardrails apply policy-based filtering to prompts in real time before they reach the FM, and routing rejected prompts through a Step Functions workflow that triggers a Lambda-based moderation review gives the escalation path for suspicious content while keeping the main path fast. Client-side keyword checks are bypassable, CloudTrail is an audit log and cannot block requests, and a nightly S3 batch is not real-time validation."
+ },
+ "E3-Q39": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Custom moderation workflows",
+  "rationale": "A Step Functions workflow that first applies Bedrock Guardrails (through ApplyGuardrail) for the standard harmful-content filtering, then runs a Lambda function with the platform's own moderation rules, and writes blocked inputs and violation metadata to CloudWatch Logs gives filtering, custom business rules, detailed moderation logs and low maintenance in managed services. API Gateway request validation checks formats rather than content, a SageMaker toxicity endpoint with manual review adds a model to maintain and a human queue, and blocking on sentiment or PII misclassifies benign inputs."
+ },
+ "E2-Q15": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, Other AWS classifiers for content safety",
+  "rationale": "Amazon Comprehend toxicity detection is the fully managed API that classifies text into categories such as hate speech, harassment or abuse, insults, profanity and threats and returns a confidence score per category plus an overall toxicity score, so flagged content can be routed to human review, and it fits beside the existing SageMaker flow with no new infrastructure. Fine-tuning an FM to rewrite posts does not detect abuse, translation adds nothing, and sentiment analysis measures tone rather than toxicity."
+ },
+ "E1-Q11": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 01, Preventing harmful outputs",
+  "rationale": "Bedrock Guardrails filter and constrain responses at generation time, specialised FM-based toxicity and safety evaluations measure and catch unsafe outputs systematically, and text-to-SQL transformations make regulated answers come from approved data and logic rather than free generation, which together prevent unsafe medical outputs. Blocking prompts with medical keywords cripples the assistant, nightly EMR scans are not enforcement at generation time, and S3 Object Lock protects stored data from deletion, not outputs from harm."
+ },
+ "E1-Q17": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 01, Reducing hallucinations",
+  "rationale": "Grounding the model in a Bedrock Knowledge Base gives it authoritative financial data and citations, confidence scoring with semantic similarity verification flags answers that are not supported by the retrieved sources, and JSON Schema enforcement guarantees a strict machine-readable structure that downstream code can validate. Archiving documents in Glacier Deep Archive keeps the model from reading them, GuardDuty and Security Hub detect security threats rather than fabricated numbers, and a generic fallback for all numeric requests removes the feature instead of fixing it."
+ },
+ "E1-Q45": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Defense in depth, assembled",
+  "rationale": "Amazon Comprehend classifies inputs and detects entities before the FM, Bedrock Guardrails enforce restrictions during invocation on both prompts and responses, and a Lambda function behind API Gateway validates and filters outgoing responses, giving three independent layers before content leaves the public API. Retrying prompts until the model behaves, letting the FM decide what to reject, and lowering temperature with throttling are single or non-safety controls."
+ },
+ "E2-Q66": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 01, Defense in depth, assembled",
+  "rationale": "Bedrock Guardrails configured with content filters, denied topics for investment advice, sensitive-information redaction and Automated Reasoning or grounding checks can be applied through the ApplyGuardrail API to text from any source, so the same policies run on the Kendra retrieval results and on the SageMaker model's generated output, giving consistent safety across both stages. Kendra filters and access control only limit what is retrieved, WAF and IAM control requests and access rather than content, and post-processing scripts are custom, inconsistent and cover only one stage."
+ },
+ "E1-Q20": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 01, Advanced threat detection",
+  "rationale": "Multi-layer detection with input sanitisation, dedicated prompt-injection and jailbreak classifiers, and an automated adversarial testing workflow that feeds results into a continuous security evaluation pipeline identifies disguised attacks before the FM and keeps improving as attack patterns evolve. Weekly manual review of stored prompts is neither real-time nor scalable, lowering temperature and disabling streaming do nothing against injection, and a single regex filter at API Gateway catches only known phrasings."
+ },
+ "E3-Q63": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 01, Advanced threat detection",
+  "rationale": "A multi-stage workflow in which a Lambda function sanitises the text, a threat classifier detects prompt-injection attempts, Bedrock Guardrails filter unsafe segments of both inputs and outputs, and an automated adversarial testing pipeline keeps evaluating new attack patterns gives layered real-time protection plus automated evaluation in development with little custom training. Static schemas and prompt constraints do not detect adversarial phrasing, CloudWatch metric filters on response length only notice attacks after the fact, and a single SageMaker classifier trained on red-team samples requires custom training and is one layer."
+ },
+ "E2-Q18": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Network isolation",
+  "rationale": "A SageMaker notebook in a private subnet with VPC interface endpoints for SageMaker and a gateway endpoint for S3 keeps every request on the AWS network with no public IPs and no internet path, and it is the simplest configuration to operate. An internet gateway route or a NAT gateway provides outbound internet access the mandate forbids, an external proxy is more infrastructure and still an internet path, and VPC peering cannot reach S3, which does not live in a VPC."
+ },
+ "E2-Q22": {
+  "answer": "A",
+  "confidence": "medium",
+  "section": "Unit 02, Network isolation",
+  "rationale": "SageMaker network isolation blocks all external access from the training and inference containers, and a Comprehend interface VPC endpoint in the same VPC gives a private path to Comprehend without public endpoints, which is the managed way to meet the no-internet requirement. Strictly, a network-isolated container cannot make any outbound call itself, so the Comprehend call would come from the surrounding application over the endpoint, but the other options are clearly wrong: an internet gateway and a public Comprehend endpoint violate the no-internet rule, and Comprehend is a regional service that cannot be hosted in a peered VPC."
+ },
+ "E2-Q63": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Network isolation",
+  "rationale": "Running SageMaker Studio in VPC-only mode inside a private VPC and adding a VPC gateway endpoint for S3 routes all Studio, Autopilot and processing traffic to S3 over the AWS private network without changing the workflows. An S3 interface endpoint also works but is the costlier choice where a gateway endpoint exists, a public S3 Access Point still uses public endpoints, and enabling internet access with KMS encryption leaves the transfers on the public path."
+ },
+ "E2-Q36": {
+  "answer": "B,C",
+  "confidence": "high",
+  "section": "Unit 02, Network isolation",
+  "rationale": "A custom VPC endpoint policy restricts which IAM principals may call SageMaker through the endpoint, and the security group on the endpoint's network interface restricts which EC2 instances can send traffic to it, which together limit the endpoint to approved compute and identities. Private DNS only changes name resolution, a second endpoint for the runtime does not restrict access, and Flow Logs with a Lambda function react after the fact rather than enforcing."
+ },
+ "E2-Q56": {
+  "answer": "A,B,D",
+  "confidence": "medium",
+  "section": "Unit 02, Network isolation",
+  "rationale": "Running the distributed training job in a restricted VPC with inter-container traffic encryption protects data in transit between the five instances, an S3 VPC endpoint with endpoint and bucket policies keeps dataset and checkpoint traffic off the public internet and scoped, and PrivateLink interface endpoints give the same private path to S3 and the other AWS services the job calls. Network Firewall inspection between containers is unnecessary, a read-only role cannot write checkpoints, and hand-editing security-group rules for peer containers is not the AWS-native control (SageMaker requires the training security group to allow traffic between its own members, but that is configuration, not the encryption and isolation the question asks for)."
+ },
+ "E2-Q21": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Encryption and key management",
+  "rationale": "Fine-tuning in SageMaker on S3 data encrypted with the company's KMS keys, deploying the resulting model through Bedrock with a customer managed KMS key, enabling CloudTrail for every Bedrock API call and using CloudWatch metrics for latency and throughput per Region meets the ownership, auditability and observability requirements with managed services only. SSE-S3 uses AWS-owned keys, an API Gateway proxy with Macie adds infrastructure and misuses Macie, an EC2 inference cluster with DynamoDB logs is custom everything, and skipping fine-tuning ignores the accuracy requirement."
+ },
+ "E2-Q35": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "Attaching an IAM policy to the SageMaker execution role that grants s3:GetObject, s3:PutObject and s3:ListBucket only on the two required buckets is least privilege through AWS-native access control with no public access points or federation. An open-access S3 Access Point and an unrestricted bucket policy violate least privilege, and identity federation for a notebook is both unnecessary and excluded by the requirements."
+ },
+ "E3-Q47": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "An IAM policy per developer that allows SageMaker notebook actions only on the ARN of that developer's notebook instance, while granting shared access to Rekognition and the central S3 data lake, enforces least privilege and prevents cross-notebook access with no extra service. Lifecycle configurations run scripts on the instance rather than authorising users, a shared instance with workspace permissions violates the isolation requirement, and security groups control network reachability rather than which IAM identity may start or open a notebook."
+ },
+ "E1-Q7": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "IAM Identity Center with SAML federation to the corporate IdP and permission sets gives workforce users temporary, role-based Bedrock access with CloudTrail audit and no custom code, and Amazon Cognito with OIDC federation to the IdP exchanges tokens for temporary AWS credentials for application users. Storing long-term IAM user credentials, an LDAP-checking Lambda authorizer issuing custom JWTs, and IAM users with rotated keys all keep long-lived secrets or custom authentication code."
+ },
+ "PQ-Q20": {
+  "answer": "A,E",
+  "confidence": "official",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "Cognito with OIDC integration authenticates users through the existing IdP and exchanges tokens for temporary AWS credentials that the third-party application uses for Bedrock, and IAM Identity Center with SAML federation and custom permission sets does the same for federated workforce access; both remove long-lived credentials and are logged by CloudTrail. IAM users with rotated secrets are still long-lived credentials, a Lambda authorizer issuing its own JWTs cannot grant Bedrock access and is unaudited custom code, and AssumeRole seeded with stored IAM user credentials keeps a permanent secret in the configuration."
+ },
+ "E3-Q55": {
+  "answer": "B,C",
+  "confidence": "medium",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "IAM Identity Center with Microsoft Entra ID as the external identity provider, SCIM provisioning for user and group lifecycle and permission sets for role-based Bedrock and SageMaker access is the recommended design, and direct SAML 2.0 federation from Entra ID to IAM roles mapped from security groups is the valid alternative that also avoids IAM users. Identity Center accepts external identity providers over SAML 2.0 with SCIM, not OIDC, so the OIDC option is wrong; IAM users with pass-through passwords and a custom identity proxy contradict the centralised, managed requirement."
+ },
+ "E3-Q50": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "Configuring AgentCore Identity with the corporate OIDC provider as the inbound authorizer and the internal application ID as an allowed audience makes the runtime reject tokens whose audience does not match, and setting a maximum tokens value on the agent caps response length and cost. Cognito as a proxy identity provider adds a hop and leaves the token setting unmanaged, outbound-only integration does not validate inbound requests, and SigV4-only signing disables the external identity provider the requirement mandates."
+ },
+ "E3-Q33": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Fine-grained data access with Lake Formation",
+  "rationale": "AWS Lake Formation provides table- and column-level (and row- and cell-level) permissions on S3-backed datasets registered in the Glue Data Catalog, centralises the governance policies for every study group, works with encrypted data and logs all access through CloudTrail, which removes the need to manage bucket policies or IAM configurations per group. Cognito identity pools only issue credentials, tag-based bucket policies with CloudTrail are exactly the manual approach the institute wants to avoid, and one S3 Access Point per study still means dozens of policies and no column-level control."
+ },
+ "E1-Q5": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 02, Monitoring access",
+  "rationale": "VPC endpoints keep all Bedrock and S3 traffic off the public internet, IAM together with Lake Formation enforces least privilege down to column and row level, and CloudWatch (with CloudTrail behind it) monitors and audits data-access patterns across the workflow, which covers isolation, governance and continuous visibility. API Gateway throttling is not access control, a public subnet is not isolation and default bucket policies are not governance, and network isolation without Lake Formation or resource policies leaves data access ungoverned."
+ },
+ "E3-Q30": {
+  "answer": "B,E",
+  "confidence": "high",
+  "section": "Unit 03, Detecting PII in text: Amazon Comprehend",
+  "rationale": "Comprehend PII detection has two analysis modes: the offsets analysis returns the begin and end character positions of each PII entity in the text, and the labels analysis returns the entity-type labels present in the document, so selecting both gives the exact positions and the classification-style names the compliance team needs. Key phrases, syntax and sentiment analysis describe terms, grammar and tone, none of which identifies PII."
+ },
+ "E2-Q42": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 03, Detecting PII in text: Amazon Comprehend",
+  "rationale": "Amazon Comprehend's built-in PII detection and redaction identifies names, phone numbers, addresses and account-style identifiers across text from any source (typed descriptions, Transcribe output, text from documents) at scale, with no model to train or maintain, and its asynchronous redaction jobs mask the entities before storage or downstream processing. SageMaker Canvas and Hugging Face models mean training and hosting custom PII models, and Amazon Lex is a conversational bot service, not a redaction engine for all channels."
+ },
+ "E2-Q61": {
+  "answer": "B,C",
+  "confidence": "high",
+  "section": "Unit 03, Detecting PII in text: Amazon Comprehend",
+  "rationale": "Amazon Comprehend detects and redacts general PII in the text Textract extracted, and Amazon Comprehend Medical detects and redacts protected health information while extracting the clinically important entities (conditions, medications with dosage, procedures) that must be preserved, both as managed, HIPAA-eligible APIs that slot into the existing automated pipeline. Polly narrations, Transcribe transcripts for manual compliance review and a Ground Truth labelling workforce all add manual effort and do not automate redaction."
+ },
+ "E2-Q53": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 03, Redacting inside ETL: AWS Glue",
+  "rationale": "Encrypting the S3 datasets with AWS KMS satisfies encryption at rest with AWS-managed keys, and a scheduled AWS Glue ETL job that scans the claims data, redacts credit card numbers and other PII with its sensitive-data detection transform, and writes the sanitised output to a separate S3 location gives SageMaker a clean dataset every day with no manual step. Manual Data Wrangler cleanups and a custom encryption library are not automated, masking inside the training script means SageMaker already has the raw PII, and algorithmic preprocessing such as PCA does not remove sensitive data."
+ },
+ "E1-Q42": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 03, Privacy at the model",
+  "rationale": "Comprehend PII detection identifies the sensitive fields, anonymisation and data masking (tokenisation or pseudonymisation) transform them before the text reaches Bedrock so the model works on placeholders, and Bedrock Guardrails sensitive-information filters stop responses from generating or inferring identifying details, while pseudonymised outputs still support analytics. Removing only names is incomplete and CloudWatch retention is not a privacy control, KMS encryption protects data in transit and at rest but the model still reads the PII, and IAM on inference logs protects the logs rather than the conversation."
+ },
+ "PQ-Q14": {
+  "answer": "A",
+  "confidence": "official",
+  "section": "Unit 03, Privacy for search and retrieval",
+  "rationale": "Running Amazon Comprehend PII detection and redaction over the email data in S3 removes personal information before indexing, and Amazon Kendra then provides enterprise search over the processed data so PII can never appear in results. Asking a Bedrock FM to remove PII through a system prompt at query time leaves the PII in the index and is not a reliable control, DocumentDB is a database rather than a search service, and Macie only reports where PII sits in S3 without redacting it."
+ },
+ "E1-Q44": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 03, Retention and disposal",
+  "rationale": "Amazon Comprehend and Amazon Macie detect PII before inputs are forwarded to Bedrock, Bedrock Guardrails prevent PII from appearing in responses, and an S3 Lifecycle expiration rule deletes the transient text artifacts automatically after one day, meeting all three requirements with configuration rather than scripts. Indefinite Glacier storage with no guardrails ignores the requirements, API Gateway length validation and CloudTrail monitoring do not detect PII, and manual or scheduled Lambda deletions are not an enforced retention policy."
+ },
+ "E1-Q13": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 04, Tracking data lineage and source attribution",
+  "rationale": "SageMaker programmatic model cards produce verifiable documentation of behaviour, limitations and evaluation results, the AWS Glue Data Catalog with metadata tags tracks data lineage and attributes every source, and CloudWatch Logs collects the detailed inference decision logs, all generated automatically. Step Functions histories exported to CloudTrail are not lineage or documentation, an SQS-and-DynamoDB dashboard is custom and covers only inference, and manual documentation in S3 with access logs is exactly the operational burden the team must avoid."
+ },
+ "PQ-Q3": {
+  "answer": "B,E",
+  "confidence": "official",
+  "section": "Unit 04, Tracking data lineage and source attribution",
+  "rationale": "Tagging each generated question-response set with metadata from the data source it was drawn from gives reviewers direct source lineage, and registering the curated and scraped datasets in the AWS Glue Data Catalog makes those sources first-class, documented objects the tags can point to, both with minimal ongoing work. Correlating invocation logs with sources after the fact is heavy and indirect, CloudTrail logging of reviewer actions records approvals rather than lineage, and SageMaker Clarify explains model predictions rather than tracing content to sources."
+ },
+ "E2-Q10": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 04, Organisational governance systems",
+  "rationale": "IAM policies that require the bedrock:GuardrailIdentifier condition key on InvokeModel and Converse, applied to every role that calls the FM APIs, make the approved guardrail mandatory across all teams and microservices with no new infrastructure or code paths. A central Lambda proxy is new infrastructure that can be bypassed, Parameter Store relies on every team remembering to look up the identifier, and adding a PromptRouterArn condition imposes prompt routing that has nothing to do with guardrail compliance."
+ },
+ "E3-Q27": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 04, Organisational governance systems",
+  "rationale": "AWS Outposts racks in each jurisdiction run the preprocessing and redaction on premises, so only sanitised text or feature vectors travel to Amazon Bedrock in the nearest Region and the regulated documents never leave the local boundary, with a consistent inference pattern everywhere. Uploading all documents to a primary-Region bucket violates residency however it is encrypted, SageMaker endpoints do not run in corporate data centres and syncing the data to Bedrock moves it anyway, and Wavelength Zones neither host Bedrock nor keep data on premises."
+ },
+ "E3-Q22": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 04, Continuous monitoring and automated remediation",
+  "rationale": "SageMaker Clarify computes pre-training bias metrics on the EHR training data and post-training metrics on predictions across the age and socioeconomic groups, Model Monitor's built-in bias drift monitoring on the endpoints in each Region keeps measuring in production, and publishing the metrics to CloudWatch gives per-Region alerting with almost no custom fairness code. Comprehend Medical annotations with custom Glue scans, Lambda post-processing with a QuickSight dashboard, and data-quality monitors on feature distributions are either custom code or do not measure bias."
+ },
+ "E1-Q4": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 05, Transparent systems: show the work",
+  "rationale": "Bedrock agent tracing exposes every reasoning step, knowledge-base retrieval and intermediate action, CloudWatch custom metrics store the confidence and uncertainty scores, and presenting the model's reasoning displays and attributed evidence in the application UI gives users the explanations and source attribution, all with minimal custom code and no external observability system. A custom Lambda middleware computes uncertainty by hand, a Glue, Athena and QuickSight pipeline over raw prompts is an external analytics system, and SageMaker Clarify explains feature attributions of hosted models rather than FM inference calls."
+ },
+ "E1-Q57": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 05, Fair systems: measure, compare, monitor",
+  "rationale": "Bedrock Prompt Flows run controlled A/B tests over demographic test sets, publishing fairness metrics to CloudWatch tracks them over time, and an LLM-as-a-judge evaluation in Bedrock automatically scores responses for bias, which is systematic, low-code and scales without a custom pipeline. Custom fairness scripts in ECS and Athena-plus-CSV audits are manual pipelines, and SageMaker Clarify with mandatory manual labelling before each release evaluates hosted models and adds human effort."
+ },
+ "E2-Q57": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 05, Fair systems: measure, compare, monitor",
+  "rationale": "SageMaker Clarify detects bias in the training dataset with pre-training metrics, evaluates whether the deployed model amplifies bias with post-training metrics and bias-drift monitoring, and generates feature-attribution explainability reports showing which listening features drive recommendations, covering dataset, model and explanation in one tool. Model Monitor alone tracks quality and drift without fairness or explanations, Personalize weight balancing changes outputs without analysing bias, and Data Wrangler rebalancing is a manual data fix that measures nothing."
+ },
+ "E1-Q29": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 05, Policy-compliant systems: policy into controls",
+  "rationale": "Bedrock Guardrails configured with the institute's policy rules enforce content safety and restricted topics on every request and response, model cards document the FM's limitations for the mandated disclosure, and a lightweight Lambda post-processing function runs the automated compliance checks, giving policy compliance without a large custom enforcement layer. An EC2 microservice comparing text to policy documents, a nightly EventBridge batch over a sample, and SageMaker endpoints with hand-written validation containers are all heavy custom enforcement."
+ },
+ "E1-Q28": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Amazon Bedrock Guardrails: the managed safety layer",
+  "rationale": "IAM policies with the bedrock:GuardrailIdentifier condition key on InvokeModel and Converse, applied to all roles that access Bedrock FMs, deny any call that does not name the required guardrail and enforce compliance with no additional infrastructure. The ExamPro key chooses the option that also requires the bedrock:PromptRouterArn condition, but requiring a prompt router is unrelated to guardrail compliance and would break callers that do not use routing; the official AWS practice question with the same wording keys the guardrail-identifier-only option. Parameter Store lookups and a Lambda proxy add infrastructure and can be bypassed."
+ },
+ "E3-Q14": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 01, Defense in depth, assembled",
+  "rationale": "An API Gateway to Lambda to Bedrock Guardrails to Lambda pipeline gives independent layers: schema validation at API Gateway, a pre-processing Lambda function using Amazon Comprehend to detect harmful or adversarial content, Bedrock Guardrails filtering unsafe prompts and responses, and a final Lambda function running policy validation before output, all managed and without custom model training. A single Lambda with regex filtering is one layer, a SageMaker classifier requires custom training and is also one layer, and strict prompt instructions with low temperature are not safety controls."
+ },
+ "E3-Q17": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Network isolation",
+  "rationale": "SageMaker notebook instances in the corporate VPC with interface VPC endpoints for the SageMaker APIs and every other AWS service they call (Polly, S3 through a gateway endpoint) keep all traffic on the private AWS network with no internet access and full notebook functionality. A Site-to-Site VPN connects networks rather than reaching AWS service endpoints privately, an internal proxy fleet is explicitly excluded and still needs an internet path, and a NAT gateway provides exactly the outbound internet connectivity the governance office forbids."
+ },
+ "E3-Q58": {
+  "answer": "A,D",
+  "confidence": "high",
+  "section": "Unit 02, Identity: who may call the model and read the data",
+  "rationale": "IAM Identity Center with SAML-based federation to the IdP and customised permission sets gives internal users temporary, role-based access to Bedrock and SageMaker with CloudTrail auditing, and Amazon Cognito federating to the IdP over OIDC exchanges tokens for temporary AWS credentials for external partners and application users. A Lambda authorizer validating LDAP credentials and issuing JWTs is custom, unaudited code whose tokens cannot call AWS APIs, a Lambda function issuing its own access tokens is the same problem, and Organizations cross-account roles address account structure rather than identity provider integration."
+ },
+ "E2-Q65": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, Privacy for search and retrieval",
+  "rationale": "Running Amazon Comprehend PII detection and redaction over the transcripts in S3 removes policy numbers, addresses and phone numbers before indexing, and Amazon Kendra then provides natural-language enterprise search over the redacted data that integrates with Bedrock applications, so PII cannot surface in results or responses. Macie identifies PII but does not redact it before OpenSearch indexes the raw text, a system prompt at query time is not a reliable control and leaves the PII searchable, and hand-written regex in Lambda with RDS keyword search is fragile and loses natural-language search."
+ },
+ "E3-Q67": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 04, Tracking data lineage and source attribution",
+  "rationale": "Programmatic SageMaker model cards document model behaviour and versions with minimal manual effort, AWS Glue captures and tracks data lineage for all training sources, metadata tags attribute every source, and streaming detailed decision logs to CloudWatch Logs gives auditors the reasoning trail for each output, together delivering automated end-to-end traceability. Guardrails do not create compliance summaries and VPC Flow Logs record network flows rather than model interactions, Config snapshots track resource configuration rather than model provenance, and S3 versioning with manual Athena reconstruction is the manual effort the team must avoid."
+ }
+}

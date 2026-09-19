@@ -1,0 +1,128 @@
+{
+ "E1-Q62": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 01, Token efficiency techniques",
+  "rationale": "A maximum generation token limit in the inference configuration caps the overly long responses, and context pruning removes irrelevant conversation turns and documents before the prompt is sent, cutting input tokens while keeping the information the recommendation needs; both are configuration and preprocessing changes with minimal overhead. Speculative decoding speeds generation without saving tokens, a larger context-window model lets you send and pay for more tokens, and sending the entire history from S3 on every request is the cost problem itself."
+ },
+ "E3-Q36": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Token efficiency techniques",
+  "rationale": "Context-window optimisation by pruning irrelevant historical notes, prompt compression for the long claim documents, and response-size controls in the prompt attack the two causes named in the stem, oversized inputs and oversized outputs, while preserving the relevant details the summary needs. Truncating the output in Lambda after generation saves no tokens and cuts summaries mid-sentence, S3 lifecycle rules with a system prompt do not shorten what is injected into the prompt, and caching across claims whose details differ returns wrong summaries."
+ },
+ "E1-Q58": {
+  "answer": "C,E",
+  "confidence": "graded",
+  "section": "Unit 01, Cost-effective model selection",
+  "rationale": "A lightweight classifier that labels each query simple, medium or complex and routes it to an FM tier with the matching price-to-performance level stops paying high-end prices for shipment lookups, and a two-tier pipeline with routing templates and metadata stored in Bedrock Prompt Management keeps the framework maintainable without fine-tuning. Streaming does not change token billing, speculative decoding reduces compute time rather than cost, and a high-context-window model for everything is the opposite of the goal."
+ },
+ "E3-Q4": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 01, Cost-effective model selection",
+  "rationale": "Bedrock intelligent prompt routing predicts per request whether the smaller model in a family will answer well enough and sends the simple 75 percent to it, escalating complex reasoning to the larger model, which minimises cost and operational burden while preserving quality, and Comprehend sentiment analysis sits alongside for tone. Provisioned Throughput for all queries with an FAQ cache pays for capacity the simple queries do not need, fine-tuning with Kendra adds training and retrieval work the question does not ask for, and a Lex-plus-manual-routing hybrid is more operations, not less."
+ },
+ "E1-Q31": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Getting more out of the capacity you pay for",
+  "rationale": "Low GPU utilisation during latency spikes means requests are being processed one at a time; enabling request batching in the application layer and tuning batch size and batching timeout lets the FM process many requests in parallel, raising throughput and utilisation with minimal operational burden. Serial processing behind SQS lowers throughput further, cutting output tokens reduces quality without using the idle GPU capacity, and maximum fixed Provisioned Throughput pays for peak capacity all day."
+ },
+ "PQ-Q18": {
+  "answer": "C,D",
+  "confidence": "official",
+  "section": "Unit 01, Getting more out of the capacity you pay for",
+  "rationale": "Because the weights and activations fit in four GPUs, a tensor parallelism degree of 4 lets each 8-GPU instance run two model replicas and double its concurrency, and because real sequences are ten times shorter than the configured maximum, reducing the maximum sequence length frees memory for a larger rolling batch per GPU; together they raise utilisation so fewer instances are needed. Spreading one replica across all eight GPUs wastes half of them, speculative decoding targets latency rather than utilisation, and adding instances is the cost the developer wants to avoid."
+ },
+ "E2-Q27": {
+  "answer": "A",
+  "confidence": "medium",
+  "section": "Unit 01, Getting more out of the capacity you pay for",
+  "rationale": "Building capacity planning on Bedrock invocation metrics measured in tokens, and sizing Provisioned Throughput to prompt and completion token volume (committed capacity for the daytime base load, adjusted from token-based alarms where the purchase mode allows it, with on-demand or cross-Region inference for the remainder), matches capacity to real GenAI traffic and keeps token-heavy requests from starving others with minimal custom infrastructure. Bedrock does not auto scale Provisioned Throughput natively: Model Unit purchases cannot be resized (only deleted and re-bought), while the tokens-based purchase mode lets you change tokens per minute, so the option describes token-driven capacity management rather than a checkbox, but it is the only option that plans in the right unit. API Gateway throttling rejects requests rather than serving them, raising the context window and disabling scaling ignores the bursts, and a fixed number of Lambda consumers on SQS adds delay and custom plumbing."
+ },
+ "E1-Q65": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 01, Intelligent caching",
+  "rationale": "A semantic caching layer embeds each incoming query, searches an approximate nearest neighbour index of previously answered queries and returns the cached result when similarity exceeds a threshold, so the thousands of paraphrased shipment questions stop invoking the model, with no change to the FM and no new inference infrastructure. Canonicalising prompts in Lambda is still exact-match caching that misses most paraphrases, raw string caching misses even more, and CloudFront caches by URL and headers and cannot judge that two differently worded prompts mean the same thing."
+ },
+ "E3-Q8": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, Intelligent caching",
+  "rationale": "Bedrock prompt caching stores the processed static handbook as a cached prefix at a checkpoint and reuses it across subsequent invocations, so only the short user question is processed each time, cutting both latency and token cost. Moving the handbook into a database the model queries at inference changes the design and still sends retrieved text every time, models cannot consume raw embeddings in place of text, and SageMaker warm pools keep instances warm rather than caching Bedrock prompt context."
+ },
+ "E2-Q68": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Responsive systems",
+  "rationale": "Latency-optimized Bedrock models serve the simple, time-sensitive clinical questions from faster infrastructure, response streaming shows partial output immediately so the experience feels instant even for longer answers, and reserving higher-capability models for complex medical summaries controls cost. Routing everything to the most powerful model maximises latency and cost, pre-computing all possible responses is impossible for open clinical questions, and splitting each request into parallel sub-queries multiplies invocations without helping single-answer latency."
+ },
+ "E3-Q32": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 02, Responsive systems",
+  "rationale": "Pre-computing the FM answers for predictable queries such as baggage rules and visa basics into Amazon ElastiCache removes those invocations entirely and serves them in sub-millisecond time at peak, and Bedrock response streaming makes multi-step reasoning answers appear immediately, improving perceived latency for the questions that still need the model. Moving all traffic to the largest model is slower and costlier, bypassing the FM with Kendra for all known topics loses the reasoning the assistant exists for, and parallel invocations of several models per query multiplies cost."
+ },
+ "E2-Q2": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Faster and better retrieval",
+  "rationale": "Profiling the API calls shows where the time goes, pruning redundant historical context from prompts cuts token processing time, and optimising the OpenSearch Serverless vector queries with metadata filters and a bounded top-k shrinks the result sets that slow the augmentation step, all without changing the FM or re-engineering the pipeline. A denser index with a larger search window returns more, not fewer, results, caching every document in DynamoDB abandons retrieval accuracy, and raising output tokens and temperature makes answers longer and less consistent."
+ },
+ "E1-Q70": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 02, Throughput under load",
+  "rationale": "Concurrent model invocation management, raising the maximum parallel invocations toward the quota and tuning retry behaviour for bursts, keeps the pipeline full during peaks, and batch inference for highly similar summarisation requests with dynamic batch sizing from queue depth processes many documents per invocation, both without changing the model. Swapping in a smaller FM changes the model and loses accuracy, scheduled manual throttling through EventBridge is neither real-time nor a throughput gain, and truncating every document by half destroys summary quality."
+ },
+ "E2-Q31": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 02, Tuning the model's behaviour",
+  "rationale": "A/B testing several parameter profiles, favouring a lower temperature with moderate top-p sampling, constrains randomness enough for consistent tone while leaving small stylistic variation, and measuring each profile before the production change is the controlled approach the team asked for. Temperature 0 with top-k 1 removes all variation and contradicts the requirement, speculative decoding is a latency technique whose draft model does not govern style, and a larger model does not stabilise tone by itself and raises cost."
+ },
+ "E3-Q21": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 02, Profiling and tuning the whole system",
+  "rationale": "A custom SageMaker container with tensor-parallel loading spreads the billions of parameters across the GPUs so the model fits and loads efficiently, continuous batching in the DJL serving stack keeps GPUs busy as concurrency rises, and preloading the model at container startup removes the minutes of per-instance initialisation, which together address every symptom in the stem. Serverless inference offers no GPUs and cannot host such a model, a standard PyTorch container with more instances and larger volumes does not fix slow loading or batching, and streaming weights from S3 per request would make every request pay the load time."
+ },
+ "E3-Q53": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 02, Throughput under load",
+  "rationale": "Exponential backoff with jitter in the AWS SDK spreads retries so throttled Bedrock calls succeed without synchronised retry storms, and API Gateway per-client throttling limits regulate bursts before they reach Lambda and the model, reducing ThrottlingException errors and smoothing latency at peak. Fixed retry intervals in Step Functions synchronise retries and add orchestration overhead, Lambda reserved concurrency guarantees Lambda capacity but does nothing about Bedrock's quota, and Global Accelerator optimises network paths for client traffic, not Bedrock throttling."
+ },
+ "E1-Q60": {
+  "answer": "C,E",
+  "confidence": "graded",
+  "section": "Unit 02, Profiling and tuning the whole system",
+  "rationale": "Amazon Q Developer generates test cases, finds code defects and proposes optimisations inside the developer IDE, and it performs workload-aware refactoring, accelerates troubleshooting and suggests integration patterns aligned with company standards, which is how it raises productivity and automates performance tuning with the least operational overhead. It is not a vector-indexing code generator to deploy through CI/CD, not a schema-migration manager, and not something you deploy as an EC2 inference endpoint for nightly validations."
+ },
+ "E1-Q30": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 03, From dashboards to decisions",
+  "rationale": "Step Functions provides the fully managed orchestration, Bedrock multimodal foundation models analyse the images and video clips with no custom ML code or GPU infrastructure, S3 stores the extracted attributes, and QuickSight dashboards summarise the trends, giving a serverless pipeline with the least operational overhead. GPU tasks on ECS, custom SageMaker training with EMR aggregation, and Rekognition labels with a hand-built CloudFront UI all add infrastructure or custom code the company wants to avoid."
+ },
+ "E1-Q48": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 01, Getting more out of the capacity you pay for",
+  "rationale": "Because the model fits in four GPUs, a tensor parallelism degree of 4 runs two full replicas per 8-GPU instance and doubles concurrency, and reducing the oversized maximum sequence length frees GPU memory for larger rolling batches and higher throughput, so the endpoint stops scaling out with idle GPUs; neither change refactors the model. More instances with smaller batches increases cost, spreading one replica across all eight GPUs is the current waste, and speculative decoding targets per-request latency rather than utilisation."
+ },
+ "E3-Q20": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 01, Intelligent caching",
+  "rationale": "Amazon MemoryDB with vector search stores the query embeddings and their cached responses in memory and performs a fast semantic similarity check, returning a previous answer when a new troubleshooting question is close enough and invoking the FM only for genuinely new questions, which integrates directly with the existing SageMaker JumpStart embeddings pipeline. Exact string matching misses questions that differ by a few words, Kendra's keyword search is not a vector similarity cache, and exact SQL lookups on stored text in PostgreSQL ignore the embeddings entirely."
+ },
+ "E1-Q51": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 02, Throughput under load",
+  "rationale": "Cross-Region inference routes model invocations to other Regions in the geography that have capacity while keeping the same foundation model and API structure, so throttling at seasonal peaks disappears without new infrastructure and at on-demand prices. Provisioned Throughput reserves capacity you pay for all year, prompt routing changes the model used, and a Lambda wrapper with a manual fallback Region is custom infrastructure that reinvents what cross-Region inference already does."
+ }
+}

@@ -1,0 +1,266 @@
+{
+ "E1-Q2": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Open-source frameworks AWS names",
+  "rationale": "Strands Agents build the specialised agents, Agent Squad coordinates them while maintaining persistent shared state, and MCP gives them a standard way to call tools such as case-history queries and document retrieval, so intermediate reasoning and prior steps survive multi-step investigations. Scheduled recomputation with S3 files, chained Lambda functions without shared memory, and one giant prompt cannot preserve or share state."
+ },
+ "E1-Q9": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 01, Structured reasoning with Step Functions",
+  "rationale": "A Step Functions state machine that alternates FM reasoning, tool execution and observation capture, feeding structured output into the next state, is the ReAct pattern with deterministic sequencing and preserved state. EventBridge Pipes and SQS chains enforce no structure, and a single expanded prompt cannot call tools and validate intermediate results."
+ },
+ "E1-Q12": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 02, Optimising cost and performance",
+  "rationale": "API-based model cascading sends the lightweight majority of requests to a small, low-latency Bedrock model and escalates only the roughly eight percent that need deeper reasoning to a larger FM, cutting cost and latency while preserving quality where it matters. Routing everything to a fine-tuned large model, one medium model for all, or the largest model with Provisioned Throughput all pay premium prices for routine work."
+ },
+ "E1-Q15": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 03, Shipping safely: CI/CD and the GenAI gateway",
+  "rationale": "A CodePipeline and CodeBuild pipeline runs automated tests and security scans on every gateway change, produces an auditable release history, and deploys behind API Gateway with automatic rollback when production behaviour degrades. EC2 with cron restarts, manual Lambda alias deployments after local tests, and manual image pushes to ECR provide neither validation nor rollback."
+ },
+ "E1-Q32": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 04, Routing requests to the right model",
+  "rationale": "Step Functions content-based branching inspects each request (length, technical content, code snippets) and routes it to the matching Bedrock model, and routing rules evolve as state machine revisions with performance metrics feeding updates, all without touching application code. Hardcoded backend logic needs redeployment, rules in S3 still require application logic to interpret them, and API Gateway transformations to per-model Lambda functions cannot evaluate metrics or evolve easily."
+ },
+ "E1-Q33": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 04, Resilience",
+  "rationale": "The SDK's exponential backoff with jitter retries 429s and transient timeouts without flooding Bedrock, API Gateway rate limiting protects downstream systems from excess traffic, and X-Ray traces every call and retry end to end. An EC2 batching proxy adds latency and infrastructure, higher Lambda concurrency with uncontrolled retries amplifies load, and immediate retry loops make throttling worse."
+ },
+ "E1-Q37": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 03, Connecting to systems that already exist",
+  "rationale": "Publishing claim events from the on-premises system to EventBridge over HTTPS decouples it from the model, a Lambda target invokes Bedrock asynchronously, and writing results to a synchronised store such as DynamoDB or S3 lets downstream systems consume summaries as soon as they are ready. A self-managed queue with batch uploads adds delay, a synchronous API Gateway to Bedrock call couples the systems, and a VPN for direct DynamoDB writes is neither loosely coupled nor an integration pattern."
+ },
+ "E1-Q38": {
+  "answer": "A,C",
+  "confidence": "graded",
+  "section": "Unit 01, Amazon Bedrock AgentCore: what AWS recommends",
+  "rationale": "The AgentCore SDK entrypoint decorator generates the HTTP server, routing and health checks, and the AgentCore starter toolkit automates packaging, containerisation and deployment to AgentCore Runtime, which supports both sub-second responses and multi-minute streaming with no infrastructure management. A custom FastAPI server, SageMaker real-time endpoints and ECS on Fargate all require the manual server and infrastructure work the question excludes."
+ },
+ "E1-Q46": {
+  "answer": "C",
+  "confidence": "graded",
+  "section": "Unit 01, Reliable tool integrations",
+  "rationale": "Lambda functions between the model and each tool validate and sanitise the generated parameters, handle errors in a structured way, and return corrective messages so the FM can retry with valid inputs, which keeps tool execution safe. Forwarding calls unchecked through EventBridge Pipes, cleaning parameters later with Glue, and blind retries do not prevent bad calls."
+ },
+ "E1-Q49": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 01, MCP: how tools are exposed",
+  "rationale": "Stateless MCP servers on Lambda serve lightweight tools such as exchange-rate lookups with minimal latency, ECS hosts the compute-intensive sentiment analysis tools, and MCP client libraries give the FM one consistent discovery and invocation pattern across both. Tool logic in S3 files bypasses MCP, and forcing everything onto ECS or everything onto Lambda mismatches compute to tool needs."
+ },
+ "E1-Q50": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 01, Safeguards on autonomous behaviour",
+  "rationale": "Step Functions provides explicit stopping conditions, failure branches and maximum iteration limits, and Lambda functions enforce timeouts and circuit breakers on external tool calls, so the workflow halts on failure or excessive latency. CloudWatch Logs alone requires manual termination, prompt instructions are not enforceable, and SQS dead-letter queues only park failures for later investigation."
+ },
+ "E1-Q52": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 01, Coordinating several models",
+  "rationale": "A model selection and aggregation framework routes each request to the specialised FM for its intent and merges the outputs with custom logic into one unified response, which is exactly multi-capability coordination. Separate endpoints chosen by researchers, one general model with a bigger context window, and random distribution across models do not select by intent or aggregate."
+ },
+ "E1-Q53": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "Bedrock streaming APIs return tokens as they are generated, and an API Gateway WebSocket endpoint delivers them to browser clients over a standards-based persistent bidirectional connection with no long-running synchronous request. An ALB-fronted proxy that waits for full responses, SQS long polling, and Lambda polling for the complete text all defeat incremental delivery."
+ },
+ "E1-Q54": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 01, Humans in the loop",
+  "rationale": "Step Functions orchestrates conditional human-review steps that trigger only when outputs carry uncertainty markers or high-risk flags, and API Gateway endpoints collect structured reviewer feedback for later prompt refinement. Sending every output to batch approval ignores the conditions, a CloudFront web form is not a workflow, and parsing Slack comments is unstructured and unreliable."
+ },
+ "E1-Q59": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 02, What makes LLM deployment different",
+  "rationale": "A container pattern optimised for LLMs uses tensor parallelism to spread a 70B model across GPUs, lazy weight loading to cut startup delay, and GPU-aware partitioning to maximise memory efficiency and token throughput while keeping the container flexible for upgrades. Lambda cannot hold the model, a classical container loading through CPU memory is slow and wasteful, and many small endpoints behind a load balancer do not solve per-request GPU memory needs."
+ },
+ "E1-Q61": {
+  "answer": "B",
+  "confidence": "graded",
+  "section": "Unit 02, Deployment options and when each fits",
+  "rationale": "Provisioned Throughput gives the concierge dashboard consistently low latency at peak, Lambda-based on-demand invocation lets the public website scale with unpredictable spikes at pay-per-use cost, and a SageMaker endpoint handles scheduled batch itinerary jobs with longer processing. All-serverless with Lambda batch jobs lacks guaranteed low latency, reserved concurrency does not reserve Bedrock capacity, and one SageMaker endpoint for everything wastes cost and ignores Bedrock."
+ },
+ "E1-Q66": {
+  "answer": "A",
+  "confidence": "graded",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "API Gateway validates requests and fronts the synchronous Bedrock calls for real-time clients, while SQS with Lambda workers processes the long, unpredictable asynchronous requests reliably in the background. A monolithic ECS container behind EventBridge, a single Lambda for everything, and an EC2 poller with the CLI provide neither validation nor reliable asynchronous handling."
+ },
+ "E1-Q68": {
+  "answer": "D",
+  "confidence": "graded",
+  "section": "Unit 03, Securing access",
+  "rationale": "IAM Identity Center with SAML federation to the enterprise IdP centralises authentication, and fine-grained IAM roles assigned to authorised analyst groups give least-privilege Bedrock invocation with temporary credentials only. API keys are not user identities, per-analyst IAM users and stored access keys are long-lived credentials, and none of them integrate the enterprise IdP."
+ },
+ "E2-Q7": {
+  "answer": "D",
+  "confidence": "high",
+  "section": "Unit 05, Developer productivity with Amazon Q Developer",
+  "rationale": "Amazon Q Developer generates and refactors Bedrock API integration code, provides inline AWS SDK suggestions, and helps build automated tests for GenAI components, which addresses SDK correctness, consistent testing and safe refactoring directly. A monolith rewrite, pre-commit hooks with manual dashboard inspection, and Powertools templates with manual reviews do not improve productivity while keeping quality."
+ },
+ "E2-Q12": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, Enhancing existing applications",
+  "rationale": "The application calls a REST endpoint on API Gateway, a Lambda function invokes Bedrock, and the summary is posted back asynchronously to the application's webhook URL, keeping the legacy microservices architecture intact with a lightweight integration. Direct synchronous Bedrock calls block the application, S3 polling adds latency and complexity, and a long-lived ECS container with its own API is heavier than needed."
+ },
+ "E2-Q14": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 05, Interfaces people can actually use",
+  "rationale": "Amplify supplies a declarative UI for clinicians with minimal front-end code, an OpenAPI specification defines the FM interaction contract for API-first integration with hospital systems, and Bedrock Prompt Flows lets the team visually orchestrate the summarisation logic before embedding it. AppSync does not auto-generate a UI, a custom React app with browser-side orchestration is heavy custom code, and a Flask app on EC2 is unmanaged."
+ },
+ "E2-Q19": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 05, Enhancing business systems",
+  "rationale": "Step Functions orchestrates the validate, classify and update-CRM document workflow, Bedrock Data Automation performs enrichment and classification, and Amazon Q Business connected to internal data sources gives customer service a secure knowledge assistant, covering all three teams with managed services. A custom EC2 application and a single Lambda function are unmanaged monoliths, and an internet-enabled Bedrock agent called from the CRM exposes data and mismatches the requirements."
+ },
+ "E2-Q26": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, MCP: how tools are exposed",
+  "rationale": "Exposing Kinesis streams, CloudWatch alerts and embedding queries as MCP tools through a unified backend gives the model deterministic, auditable, consistently structured tool access without credentials, SDK calls or query syntax in prompts. Relying on embeddings alone loses live data, making the model emit function-call syntax in prompts is fragile, and letting the model pick microservice endpoints from conversational context is neither standardised nor auditable."
+ },
+ "E2-Q28": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Hosting the application and the edge",
+  "rationale": "Training in SageMaker and deploying the model to AWS IoT Greengrass devices at each site runs inference entirely on premises with millisecond routing decisions in local Lambda functions, and Greengrass pulls model updates from the cloud when connectivity is available. ECS clusters per facility and local EC2 add operational overhead, and cloud endpoints with Kinesis Video Streams need the network the sites lack."
+ },
+ "E2-Q29": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "An API Gateway WebSocket API with a Lambda function gives real-time bidirectional communication with the least operational overhead; the function reads the metadata label to select the model and style prompts and uses Bedrock response streaming to push suggestions as they are generated. REST with chunked encoding is one-way and awkward, SQS plus Step Functions plus DynamoDB adds latency and components, and ECS containers behind an ALB mean managing infrastructure."
+ },
+ "E2-Q43": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 05, Advanced application patterns",
+  "rationale": "Step Functions orchestrates the extraction, compliance and decision agents as sequential Bedrock invocations, passes structured outputs between them in a prompt chaining pattern, and provides retries, branching and detailed execution traces natively. A single Lambda with conditional logic, SQS with DynamoDB Streams, and a custom orchestration framework on EC2 lack managed retries, branching and traceability."
+ },
+ "E2-Q44": {
+  "answer": "A",
+  "confidence": "medium",
+  "section": "Unit 02, Deployment options and when each fits",
+  "rationale": "A SageMaker real-time inference endpoint on a GPU instance returns image generations in near real time with consistent performance under variable load through auto scaling, and the application invokes it directly. The 50 MB figure describes the text-description dataset the service must support, not a single request: individual prompts are small, so the real-time endpoint's 6 MB payload and 60-second response limits are not the constraint here. Batch transform is offline, serverless inference is CPU only, and asynchronous inference trades interactivity for queued processing, which the near-real-time creative workflow rules out. Compare the official practice question in this unit, where inputs of 50 MB per request and a 15-minute tolerance make asynchronous inference the answer; the discriminator is per-request size and how long the user will wait."
+ },
+ "E2-Q46": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 05, Enhancing business systems",
+  "rationale": "Amazon Augmented AI integrates with Textract so only low-confidence fields are routed to human reviewers while high-confidence extractions pass straight to validation, which is a managed workflow with minimal custom code. Sending results to a Claude model then to humans still reviews everything, a full Ground Truth labelling job is not a review workflow, and eliminating human review violates the accuracy requirement. A2I is now closed to new customers, but it remains the keyed answer where it appears."
+ },
+ "E2-Q55": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 04, API Gateway features you will be tested on",
+  "rationale": "API Gateway exposes a custom FM API with request validation for token limits, chunked transfer encoding to stream Bedrock responses incrementally, and integrated Lambda functions that apply the SDK's retry strategy for model timeouts, keeping the burden off application servers. Direct calls with manual logic in the backend, an EC2 worker fleet behind SQS, and AppSync invoking Bedrock directly do not provide that managed validation, streaming and retry layer."
+ },
+ "E2-Q60": {
+  "answer": "C",
+  "confidence": "medium",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "Publishing each upload to an SQS queue and letting a consumer Lambda function call Bedrock and write to S3 with retries decouples ingestion from model latency, absorbs unpredictable spikes, tolerates failures through the queue and dead-letter handling, and costs only per use. Synchronous invocation blocks users and fails under spikes, a Step Functions fan-out is heavier than a queue for independent documents, and the SQS-batched 'custom Bedrock batch inference workflow' adds custom orchestration. Note that a plain Bedrock batch inference job would be the cheapest path when users truly accept a 24-hour delay; the option here describes a custom workflow, which is why the queue-based design is keyed."
+ },
+ "E2-Q70": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 02, Deployment options and when each fits",
+  "rationale": "SageMaker Serverless Inference suits a model under 5 GB that serves real-time requests at tens of concurrent invocations with variable traffic: it provisions nothing, scales automatically and needs no autoscaling policies. Asynchronous inference queues requests instead of answering in real time, EC2 with Auto Scaling means managing infrastructure, and a real-time endpoint with manual autoscaling is the configuration overhead the team wants to avoid."
+ },
+ "E3-Q12": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 01, Open-source frameworks AWS names",
+  "rationale": "Strands Agents with built-in memory modules preserve long-term scientific context and state across multi-step tasks, and MCP tools give the specialised agents shared context access without hand-coded synchronisation. Passing memory snapshots from DynamoDB manually, versioned JSON files in S3, and a shared EFS volume between ECS containers all require custom state management."
+ },
+ "E3-Q25": {
+  "answer": "C,D",
+  "confidence": "medium",
+  "section": "Unit 05, Enhancing business systems",
+  "rationale": "Amazon Q Business data source connectors index the knowledge and design repositories, IAM Identity Center provides authentication and enterprise RBAC, and connector synchronisation carries document permissions so enterprise access groups map onto what each user may see, all managed. A custom Cognito proxy with its own RBAC, scheduled reindexing with tagging rules, and API Gateway with Lambda validators add custom identity and ingestion work the question excludes."
+ },
+ "E3-Q29": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 03, Connecting to systems that already exist",
+  "rationale": "Routing the existing order events through EventBridge and triggering a Lambda function that formats the event, invokes Bedrock and stores the enrichment keeps the legacy application untouched and loosely coupled while every event automatically drives AI processing. A synchronous REST call or a direct microservice call adds coupled API calls to the legacy code, and uploading JSON snapshots to S3 is an indirect workaround."
+ },
+ "E3-Q42": {
+  "answer": "B",
+  "confidence": "medium",
+  "section": "Unit 02, Hosting the application and the edge",
+  "rationale": "Amazon ECS with the Fargate launch type runs the telemetry component as a container without managing servers and holds persistent WebSocket sessions for as long as the task runs, which serverless functions cannot. EC2 means managing servers and Lambda cannot keep a persistent session. App Runner is the other defensible answer as a fully managed container service, but its request-driven scaling and HTTP service model suit request/response APIs better than long-held sockets; if the exam offers only App Runner as the managed container option, choose it."
+ },
+ "E3-Q45": {
+  "answer": "C",
+  "confidence": "high",
+  "section": "Unit 01, MCP: how tools are exposed",
+  "rationale": "AgentCore Runtime hosts a Strands agent without infrastructure, a prebuilt MCP server for Aurora exposes inventory data as MCP tools, and the chat interface connects to the agent, meeting the MCP requirement with the least operational complexity. Lex with Lambda and SNS or SQS to Fargate does not use MCP or an agent, and FastMCP with LangGraph on EC2 plus a custom SageMaker agent means managing servers and custom code."
+ },
+ "E3-Q48": {
+  "answer": "B",
+  "confidence": "high",
+  "section": "Unit 05, Interfaces people can actually use",
+  "rationale": "Amplify generates declarative UI components that call the Bedrock-backed APIs, an OpenAPI specification enables API-first integration for developer teams, and Bedrock Prompt Flows lets non-technical teams assemble GenAI workflows without code. Custom React components with SDK calls, copied SageMaker notebooks, and a Lambda-backed endpoint that every team wraps with its own middleware all require custom development."
+ },
+ "E3-Q59": {
+  "answer": "A,C",
+  "confidence": "high",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "API Gateway with Lambda gives a synchronous inference endpoint that validates payloads before calling InvokeModel, and SDK clients on ECS submitting jobs to an SQS queue consumed by Lambda give a decoupled asynchronous path for large video workloads, each scaling independently. Direct client calls to the runtime API skip validation and middleware, EventBridge Pipes does not throttle synchronous traffic, and one monolithic EC2 endpoint is neither decoupled nor managed."
+ },
+ "E3-Q65": {
+  "answer": "A",
+  "confidence": "high",
+  "section": "Unit 05, Interfaces people can actually use",
+  "rationale": "Defining the unrecognised phrases as synonyms of the existing slot values in the custom slot type makes Lex resolve 'pamper session' to the spa value without changing Lambda code, the DynamoDB schema or the intents. Runtime hints and new enumeration values change what the Lambda receives, and new intents alter the intent structure."
+ },
+ "E3-Q68": {
+  "answer": "D",
+  "confidence": "medium",
+  "section": "Unit 05, Enhancing business systems",
+  "rationale": "Amazon Kendra's GenAI index can act as the retriever behind a Bedrock Knowledge Base, so hybrid-search retrieval and Kendra's document metadata (intent and product attributes) live in one store; Amazon Personalize, the managed recommendation service, then ranks the retrieved items for the customer, and the LLM generates from that ranked context, giving retrieval, ranking and generation in a single flow. Invoking the three services separately without a unified store, merging results manually, and running Personalize as a separate pipeline all keep the separate data flows the question forbids."
+ },
+ "PQ-Q4": {
+  "answer": "A,B",
+  "confidence": "official",
+  "section": "Unit 05, Developer productivity with Amazon Q Developer",
+  "rationale": "Integrating Amazon Q Developer's automated unit and integration test generation into CI/CD pipelines accelerates testing, and configuring it to generate and refactor integration code with API guidance and performance suggestions enforces consistent patterns and tuning across the codebase. Reserving refactoring for manual cycles, only documenting patterns retrospectively, and mandatory manual security approvals slow development rather than accelerate it."
+ },
+ "PQ-Q8": {
+  "answer": "B",
+  "confidence": "official",
+  "section": "Unit 04, Three interaction patterns",
+  "rationale": "An API Gateway WebSocket API linked to a Lambda function streams suggestions in real time with the least operational overhead; the function reads the category tag to route to the right model, enforces the style guide through Bedrock Prompt Management, and uses the Bedrock streaming API. REST with function URLs and chunked encoding lacks the bidirectional real-time channel, SQS plus Step Functions plus DynamoDB adds latency and components, and ECS behind an ALB means managing containers."
+ },
+ "PQ-Q15": {
+  "answer": "C,D",
+  "confidence": "official",
+  "section": "Unit 01, Amazon Bedrock AgentCore: what AWS recommends",
+  "rationale": "The AgentCore SDK's entrypoint decorator automatically handles HTTP server setup, endpoint routing and health monitoring, and the AgentCore starter toolkit automates packaging, containerisation and deployment, so existing Python agent code runs on AgentCore Runtime with sub-second and long streaming responses and minimal operations. ECS on Fargate, SageMaker real-time endpoints and a hand-written FastAPI server with /invocations and /ping all reintroduce infrastructure and server management."
+ },
+ "PQ-Q19": {
+  "answer": "C",
+  "confidence": "official",
+  "section": "Unit 02, Deployment options and when each fits",
+  "rationale": "SageMaker Asynchronous Inference on an accelerated computing instance handles GPU-based image generation with inputs up to 50 MB and returns results within the 15-minute window, queuing requests and scaling to zero when idle. Real-time endpoints cap payloads at 6 MB and must answer within 60 seconds, serverless inference offers no GPUs, and batch transform is for offline datasets rather than on-demand requests."
+ }
+}
